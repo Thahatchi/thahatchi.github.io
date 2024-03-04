@@ -1,0 +1,47 @@
+
+.navbar ul{
+  list-style-type: none;
+  background-color: hsl(0, 0%, 0%);
+  padding: 20px;
+  margin: 0px;
+  overflow: hidden;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.navbar a{
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+  padding: 10px;
+  display: block;
+  text-align: center;
+}
+.navbar a:hover{
+  background-color: hsl(0, 0%, 10%);
+}
+.navbar li{
+  float: left;
+}
+
+footer{
+  text-align: center;
+  background-color: royalblue;
+  color: white;
+  bottom: 0;
+  position: absolute ;
+}
+
+h1{
+  padding: 40px;
+  text-align: center;
+  background: royalblue;
+  color: white;
+  font-size: 30px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
