@@ -1,0 +1,48 @@
+<!-- contact.html (Contact Page) -->
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="Contact.html">Contact</a></li>
+        </ul>
+    </nav>
+<main>
+    <h1>Contact me!</h1>
+
+    <script>
+    function submitForm() {
+        // Code to handle form submission
+        // You can send the form data to a server using AJAX or fetch
+        // For this example, let's just simulate a successful submission
+        alert("Thank you someone will be in contact with you soon!");
+        // You can also redirect the user to another page using:
+        // window.location.href = "thankyou-html";
+        // or modify the DOM to display a thank you message without leaving the page
+    }
+</script>
+    <form onsubmit="event.preventDefault(); submitForm();">
+        <!-- Add your form fields here -->
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+        
+        <input type="submit" value="Submit">
+    </form>
+</main>
+
+
+<footer>
+    <p>&copy; 2024 Kevin Co. All Rights reserved.</p>
+</footer>
+
+</body>
+</html>
