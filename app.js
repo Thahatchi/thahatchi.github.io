@@ -9,9 +9,15 @@ app.get('/', (req, res) => {
 });
 
 app.post('/submit-form', (req, res) => {
-    const username = req.body.username; // access form data
-    // Add validation logic here
-    res.send(`Username is ${username}`);
+    const { name, email, message } = req.body; // access form data
+    // Check if all fields are present
+    if (name && email && message) {
+        // Here you might perform additional validation if needed
+        // For simplicity, we'll assume all data is valid
+        res.send('Message has been received!');
+    } else {
+        res.status(400).send('Please provide all required information: name, email, and message.');
+    }
 });
 
 app.listen(port, () => {
