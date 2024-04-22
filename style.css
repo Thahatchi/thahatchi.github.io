@@ -45,3 +45,16 @@ h1{
   margin-right: auto;
   width: 50%;
 }
+
+.image-container {
+  text-align: center; /* Center align the contents */
+}
+
+.image-container img {
+  max-width: 25%; /* Set maximum width to ensure image isn't scrunched */
+  height: auto; /* Maintain aspect ratio */
+}
+
+.image-container h3 {
+  margin-top: 10px; /* Add some spacing between the image and the text */
+}
