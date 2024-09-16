@@ -21,7 +21,24 @@
 .navbar li{
   float: left;
 }
+/* Ensure the body and html take up the full height of the viewport */
+html, body {
+    height: 100%;
+    margin: 0;
+}
 
+/* Use Flexbox to make the body a column layout */
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Make the main content area take up available space */
+main {
+    flex: 1;
+}
+
+/* Existing footer styles */
 footer {
     position: fixed;
     bottom: 0;
@@ -31,7 +48,6 @@ footer {
     padding: 10px 0;
     box-shadow: 0 -2px 5px rgba(0,0,0,0.1); /* Optional shadow effect */
 }
-
 
 h1{
   padding: 40px;
