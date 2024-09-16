@@ -22,13 +22,16 @@
   float: left;
 }
 
-footer{
-  text-align: center;
-  background-color: royalblue;
-  color: white;
-  bottom: 0;
-  position: absolute ;
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #f1f1f1; /* You can change the color */
+    text-align: center;
+    padding: 10px 0;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1); /* Optional shadow effect */
 }
+
 
 h1{
   padding: 40px;
