@@ -77,4 +77,5 @@ $(document).ready(function() {
     showSlide(currentSlide);
 
     // Attach event handlers to navigation arrows
-    wind
+    window.plusSlides = plusSlides; // Make function accessible to inline event handlers
+});
