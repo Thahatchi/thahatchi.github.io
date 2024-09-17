@@ -42,7 +42,7 @@ $(document).ready(function() {
                     htmlContent += '<p><strong>Author:</strong> ' + book.author + '</p>';
                     htmlContent += '<p><strong>Publisher:</strong> ' + book.publisher + '</p>';
                     htmlContent += '<p><strong>Year:</strong> ' + book.year + '</p>';
-                    htmlContent += '<img src="' + book.cover + '" alt="Book Cover"></li>';
+                    htmlContent += '<img src="' + (book.cover || 'default-cover.jpg') + '" alt="Book Cover"></li>';
                 });
                 htmlContent += '</ul>';
                 $('#ebooks-results').html(htmlContent);
@@ -53,8 +53,25 @@ $(document).ready(function() {
                 htmlContent += '<p><strong>Publisher:</strong> ' + (book.publishers || []).map(publisher => publisher.name || publisher).join(', ') + '</p>';
                 htmlContent += '<p><strong>Published Date:</strong> ' + book.publish_date + '</p>';
                 htmlContent += '<p><strong>Description:</strong> ' + (book.description || 'No description available') + '</p>';
-                html
+                htmlContent += '<img src="' + (book.cover ? book.cover.medium : 'default-cover.jpg') + '" alt="Book Cover">';
+                $('#openlibrary-book-data').html(htmlContent);
+            } else if (page === 'openlibrary-search') {
+                var books = data.docs;
+                htmlContent += '<ul>';
+                $.each(books, function(index, book) {
+                    htmlContent += '<li><h2>' + (book.title || 'No Title') + '</h2>';
+                    htmlContent += '<p><strong>Author:</strong> ' + (book.author_name || []).join(', ') + '</p>';
+                    htmlContent += '<p><strong>Publisher:</strong> ' + (book.publisher || []).join(', ') + '</p>';
+                    htmlContent += '<p><strong>Published Date:</strong> ' + (book.publish_year ? book.publish_year[0] : 'N/A') + '</p>';
+                    htmlContent += '<img src="' + (book.cover_i ? 'https://covers.openlibrary.org/b/id/' + book.cover_i + '-M.jpg' : 'default-cover.jpg') + '" alt="Book Cover"></li>';
+                });
+                htmlContent += '</ul>';
+                $('#openlibrary-search-results').html(htmlContent);
             }
-        }
-                  }
-                  }
+        }).fail(function() {
+            $('#google-books-book-content, #search-results, #ebooks-results, #openlibrary-book-data, #openlibrary-search-results').html('<p>Failed to load data. Please try again later.</p>');
+        });
+    } else {
+        $('#google-books-book-content, #search-results, #ebooks-results, #openlibrary-book-data, #openlibrary-search-results').html('<p>Invalid page or data not available.</p>');
+    }
+});
