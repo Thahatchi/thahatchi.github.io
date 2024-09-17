@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Open Library Book</title>
+    <title>Open Library Search</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -18,8 +18,8 @@
         </ul>
     </nav>
     <main>
-        <h1>Open Library Book Details</h1>
-        <div id="openlibrary-book-data"></div>
+        <h1>Open Library Search Results</h1>
+        <div id="openlibrary-search-results"></div>
     </main>
     <footer>
         <p>&copy; 2024 Your Name. All Rights Reserved.</p>
@@ -27,17 +27,20 @@
 
     <script>
         $(document).ready(function() {
-            $.getJSON('https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/openlibrary-book.json', function(data) {
-                var book = data;
-                var html = '<h2>' + book.title + '</h2>';
-                html += '<p><strong>Author:</strong> ' + (book.authors || []).map(author => author.name || author).join(', ') + '</p>';
-                html += '<p><strong>Publisher:</strong> ' + (book.publishers || []).map(publisher => publisher.name || publisher).join(', ') + '</p>';
-                html += '<p><strong>Published Date:</strong> ' + book.publish_date + '</p>';
-                html += '<p><strong>Description:</strong> ' + (book.description || 'No description available') + '</p>';
-                html += '<img src="' + (book.cover ? book.cover.medium : 'default-cover.jpg') + '" alt="Book Cover">';
-                $('#openlibrary-book-data').html(html);
+            $.getJSON('https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/openlibrary-search.json', function(data) {
+                var books = data.docs;
+                var html = '<ul>';
+                $.each(books, function(index, book) {
+                    html += '<li><h2>' + (book.title || 'No title') + '</h2>';
+                    html += '<p><strong>Author:</strong> ' + (book.author_name || []).join(', ') + '</p>';
+                    html += '<p><strong>Publisher:</strong> ' + (book.publisher || []).join(', ') + '</p>';
+                    html += '<p><strong>Published Date:</strong> ' + (book.publish_date || 'No date available') + '</p>';
+                    html += '<img src="' + (book.cover_i ? 'https://covers.openlibrary.org/b/id/' + book.cover_i + '-M.jpg' : 'default-cover.jpg') + '" alt="Book Image"></li>';
+                });
+                html += '</ul>';
+                $('#openlibrary-search-results').html(html);
             }).fail(function() {
-                $('#openlibrary-book-data').html('<p>Failed to load data. Please try again later.</p>');
+                $('#openlibrary-search-results').html('<p>Failed to load data. Please try again later.</p>');
             });
         });
     </script>
