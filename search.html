@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Books Search Results</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Google Books Search Results</h1>
+    <div id="search-results"></div>
+    <script>
+    $(document).ready(function() {
+        $.getJSON('https://www.googleapis.com/books/v1/volumes?q=modern%20web', function(data) {
+            var books = data.items;
+            $.each(books, function(index, book) {
+                $('#search-results').append('<h2>' + book.volumeInfo.title + '</h2>');
+                $('#search-results').append('<p>Author(s): ' + book.volumeInfo.authors.join(', ') + '</p>');
+                $('#search-results').append('<p>Published Date: ' + book.volumeInfo.publishedDate + '</p>');
+                // Add more fields as needed
+            });
+        });
+    });
+    </script>
+</body>
+</html>
