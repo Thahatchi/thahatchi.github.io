@@ -28,7 +28,8 @@
 
     <script>
         $(document).ready(function() {
-            $.getJSON('https://raw.githubusercontent.com/username/repository/main/google-books-book.json', function(data) {
+            $.getJSON('https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/google-books-book.json', function(data) {
+    // Your code here to process and display data
                 var book = data;
                 var html = '<h2>' + book.volumeInfo.title + '</h2>';
                 html += '<p><strong>Author:</strong> ' + book.volumeInfo.authors.join(', ') + '</p>';
