@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Open Library Book</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Open Library Book Information</h1>
+    <div id="openlibrary-book-info"></div>
+    <script>
+    $(document).ready(function() {
+        $.getJSON('https://openlibrary.org/api/books?bibkeys=ISBN:0201558025,LCCN:93005405&format=json&jscmd=data', function(data) {
+            $.each(data, function(key, book) {
+                $('#openlibrary-book-info').append('<h2>' + book.title + '</h2>');
+                $('#openlibrary-book-info').append('<p>Author(s): ' + book.authors.map(author => author.name).join(', ') + '</p>');
+                $('#openlibrary-book-info').append('<p>Published Date: ' + book.publish_date + '</p>');
+                // Add more fields as needed
+            });
+        });
+    });
+    </script>
+</body>
+</html>
