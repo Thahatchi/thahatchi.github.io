@@ -1,100 +1,78 @@
-.navbar ul {
-    list-style-type: none;
-    background-color: hsl(0, 0%, 0%);
-    padding: 20px;
-    margin: 0;
-    overflow: hidden;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+.navbar ul{
+  list-style-type: none;
+  background-color: hsl(0, 0%, 0%);
+  padding: 20px;
+  margin: 0px;
+  overflow: hidden;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
-.navbar a {
-    color: rgb(255, 255, 255);
-    text-decoration: none;
-    padding: 10px;
-    display: block;
-    text-align: center;
+.navbar a{
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+  padding: 10px;
+  display: block;
+  text-align: center;
 }
-
-.navbar a:hover {
-    background-color: hsl(0, 0%, 10%);
+.navbar a:hover{
+  background-color: hsl(0, 0%, 10%);
 }
-
-.navbar li {
-    float: left;
+.navbar li{
+  float: left;
 }
-
+/* Ensure the body and html take up the full height of the viewport */
 html, body {
     height: 100%;
     margin: 0;
 }
 
+/* Use Flexbox to make the body a column layout */
 body {
     display: flex;
     flex-direction: column;
 }
 
+/* Make the main content area take up available space */
 main {
     flex: 1;
 }
 
+/* Existing footer styles */
 footer {
     position: fixed;
     bottom: 0;
     width: 100%;
-    background-color: #f1f1f1;
+    background-color: #f1f1f1; /* You can change the color */
     text-align: center;
     padding: 10px 0;
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1); /* Optional shadow effect */
 }
 
-h1 {
-    padding: 40px;
-    text-align: center;
-    background: royalblue;
-    color: white;
-    font-size: 30px;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+h1{
+  padding: 40px;
+  text-align: center;
+  background: royalblue;
+  color: white;
+  font-size: 30px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
-.slideshow-container {
-    position: relative;
-    max-width: 100%;
-    margin: auto;
-    overflow: hidden;
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
 }
 
-.slide {
-    display: none;
-    padding: 20px;
-    text-align: center;
+.image-container {
+  text-align: center; /* Center align the contents */
 }
 
-.prev, .next {
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    width: auto;
-    padding: 16px;
-    margin-top: -22px;
-    color: white;
-    font-weight: bold;
-    font-size: 18px;
-    transition: 0.6s ease;
-    border-radius: 0 3px 3px 0;
-    user-select: none;
-    background-color: rgba(0,0,0,0.5);
+.image-container img {
+  max-width: 25%; /* Set maximum width to ensure image isn't scrunched */
+  height: auto; /* Maintain aspect ratio */
 }
 
-.next {
-    right: 0;
-    border-radius: 3px 0 0 3px;
-}
-
-.prev:hover, .next:hover {
-    background-color: rgba(0,0,0,0.8);
-}
-
-img {
-    max-width: 100%;
-    height: auto;
+.image-container h3 {
+  margin-top: 10px; /* Add some spacing between the image and the text */
 }
