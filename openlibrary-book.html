@@ -28,7 +28,8 @@
 
     <script>
         $(document).ready(function() {
-            $.getJSON('https://raw.githubusercontent.com/username/repository/main/openlibrary-book.json', function(data) {
+$.getJSON('https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/openlibrary-book.json', function(data) {
+    // Your code here to process and display data
                 var book = data;
                 var html = '<h2>' + book.title + '</h2>';
                 html += '<p><strong>Author:</strong> ' + book.authors.map(author => author.name).join(', ') + '</p>';
