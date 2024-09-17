@@ -39,6 +39,7 @@
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="contact.html">Contact</a></li>
+            <li><a href="milestone1.html">Milestone 1</a></li> <!-- Added link to Milestone 1 -->
         </ul>
     </nav>
 
@@ -88,4 +89,13 @@
             for (i = 0; i < tablinks.length; i++) {
                 tablinks[i].className = tablinks[i].className.replace(" active", "");
             }
-            document.getElementByI
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // Set default tab to open
+        document.getElementsByClassName("tablinks")[0].click();
+    </script>
+</body>
+</html>
+
