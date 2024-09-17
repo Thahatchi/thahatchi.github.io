@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Open Library Search Results</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Open Library Search Results</h1>
+    <div id="openlibrary-search-results"></div>
+    <script>
+    $(document).ready(function() {
+        $.getJSON('path-to-your/openlibrary-search.json', function(data) {
+            $.each(data.docs, function(index, book) {
+                $('#openlibrary-search-results').append('<h2>' + book.title + '</h2>');
+                $('#openlibrary-search-results').append('<p>Author(s): ' + book.author_name.join(', ') + '</p>');
+                $('#openlibrary-search-results').append('<p>Published Date: ' + (book.publish_date ? book.publish_date[0] : 'N/A') + '</p>');
+                // Add more fields as needed
+            });
+        });
+    });
+    </script>
+</body>
+</html>
