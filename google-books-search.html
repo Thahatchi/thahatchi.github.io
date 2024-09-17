@@ -30,12 +30,18 @@
         }
         li {
             margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #007BFF; /* Blue line between books */
         }
         img {
             display: block;
             margin: 10px auto;
             max-width: 280px; /* Increased image size */
             height: auto;
+        }
+        /* Optional: Adjust the blue color to match your site's blue */
+        .blue-line {
+            border-bottom: 2px solid #007BFF; /* Blue line color */
         }
     </style>
 </head>
@@ -61,7 +67,7 @@
                 var books = data.items;
                 var html = '<ul>';
                 $.each(books, function(index, book) {
-                    html += '<li>';
+                    html += '<li class="blue-line">';
                     html += '<h2>' + book.volumeInfo.title + '</h2>';
                     html += '<p><strong>Author:</strong> ' + (book.volumeInfo.authors || []).join(', ') + '</p>';
                     html += '<p><strong>Publisher:</strong> ' + (book.volumeInfo.publisher || 'N/A') + '</p>';
