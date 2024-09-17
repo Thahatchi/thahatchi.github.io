@@ -1,101 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milestone 1</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Additional styles for tabs */
-        .tabs {
-            overflow: hidden;
-            background-color: #f1f1f1;
-        }
-
-        .tabs button {
-            background-color: #ddd;
-            border: none;
-            outline: none;
-            padding: 14px 16px;
-            cursor: pointer;
-            font-size: 17px;
-            width: 20%;
-            float: left;
-        }
-
-        .tabs button.active {
-            background-color: #ccc;
-        }
-
-        .tabcontent {
-            display: none;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-top: none;
-        }
-    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="script.js"></script> <!-- Adjust the path if your JS file is named differently -->
 </head>
 <body>
     <nav class="navbar">
         <ul>
             <li><a href="index.html">Home</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="contact.html">Contact</a></li>
-            <li><a href="milestone1.html">Milestone 1</a></li> <!-- Added link to Milestone 1 -->
+            <li><a href="milestone1.html">Milestone 1</a></li>
+            <!-- Add more navigation links if needed -->
         </ul>
     </nav>
 
     <main>
-        <h1>Milestone 1</h1>
-        <div class="tabs">
-            <button class="tablinks" onclick="openTab(event, 'google-books-book')">Google Books Book</button>
-            <button class="tablinks" onclick="openTab(event, 'google-books-search')">Google Books Search</button>
-            <button class="tablinks" onclick="openTab(event, 'it-ebooks')">IT Ebooks</button>
-            <button class="tablinks" onclick="openTab(event, 'openlibrary-book')">OpenLibrary Book</button>
-            <button class="tablinks" onclick="openTab(event, 'openlibrary-search')">OpenLibrary Search</button>
-        </div>
-
-        <div id="google-books-book" class="tabcontent">
-            <iframe src="google-books-book.html" style="width: 100%; height: 600px; border: none;"></iframe>
-        </div>
-
-        <div id="google-books-search" class="tabcontent">
-            <iframe src="google-books-search.html" style="width: 100%; height: 600px; border: none;"></iframe>
-        </div>
-
-        <div id="it-ebooks" class="tabcontent">
-            <iframe src="it-ebooks.html" style="width: 100%; height: 600px; border: none;"></iframe>
-        </div>
-
-        <div id="openlibrary-book" class="tabcontent">
-            <iframe src="openlibrary-book.html" style="width: 100%; height: 600px; border: none;"></iframe>
-        </div>
-
-        <div id="openlibrary-search" class="tabcontent">
-            <iframe src="openlibrary-search.html" style="width: 100%; height: 600px; border: none;"></iframe>
-        </div>
+        <h1>Google Books Book Page</h1>
+        <div id="google-books-book-content"></div>
     </main>
 
     <footer>
-        <p>&copy; 2024 Kevin Co. All Rights Reserved.</p>
+        <p>&copy; 2024 Your Name. All Rights Reserved.</p>
     </footer>
-
-    <script>
-        function openTab(evt, tabName) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-            }
-            tablinks = document.getElementsByClassName("tablinks");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-            document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.className += " active";
-        }
-
-        // Set default tab to open
-        document.getElementsByClassName("tablinks")[0].click();
-    </script>
 </body>
 </html>
 
