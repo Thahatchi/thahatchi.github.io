@@ -54,3 +54,7 @@ $(document).ready(function() {
                 htmlContent += '<p><strong>Published Date:</strong> ' + book.publish_date + '</p>';
                 htmlContent += '<p><strong>Description:</strong> ' + (book.description || 'No description available') + '</p>';
                 html
+            }
+        }
+                  }
+                  }
