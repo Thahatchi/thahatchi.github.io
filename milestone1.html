@@ -6,7 +6,7 @@
     <title>Milestone 1</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="script.js"></script> <!-- Adjust the path if your JS file is named differently -->
+    <script src="script.js"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -18,8 +18,31 @@
     </nav>
 
     <main>
-        <h1>Single Book</h1>
-        <div id="google-books-book-content"></div>
+        <h1>Book Slideshow</h1>
+        <div class="slideshow-container">
+            <div class="slide" id="google-books-book">
+                <!-- Content for Google Books Book -->
+                <div id="google-books-book-content"></div>
+            </div>
+            <div class="slide" id="google-books-search">
+                <!-- Content for Google Books Search -->
+                <div id="google-books-search-content"></div>
+            </div>
+            <div class="slide" id="it-ebooks-search">
+                <!-- Content for IT Ebooks Search -->
+                <div id="it-ebooks-search-content"></div>
+            </div>
+            <div class="slide" id="openlibrary-book">
+                <!-- Content for OpenLibrary Book -->
+                <div id="openlibrary-book-content"></div>
+            </div>
+            <div class="slide" id="openlibrary-search">
+                <!-- Content for OpenLibrary Search -->
+                <div id="openlibrary-search-content"></div>
+            </div>
+            <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+            <a class="next" onclick="plusSlides(1)">&#10095;</a>
+        </div>
     </main>
 
     <footer>
@@ -27,4 +50,3 @@
     </footer>
 </body>
 </html>
-
