@@ -1,65 +1,43 @@
 $(document).ready(function() {
-    // Define the URL for each JSON file based on the current page
-    var urlMap = {
-        'google-books-book.html': 'https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/google-books-book.json',
-        'google-books-search.html': 'https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/google-books-search.json',
-        'it-ebooks-search.html': 'https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/it-ebooks-search.json',
-        'openlibrary-book.html': 'https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/openlibrary-book.json',
-        'openlibrary-search.html': 'https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/openlibrary-search.json'
+    var urls = {
+        'google-books-book': 'https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/google-books-book.json',
+        'google-books-search': 'https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/google-books-search.json',
+        'it-ebooks-search': 'https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/it-ebooks-search.json',
+        'openlibrary-book': 'https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/openlibrary-book.json',
+        'openlibrary-search': 'https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/openlibrary-search.json'
     };
 
-    // Get the current HTML file's name
-    var currentPage = window.location.pathname.split('/').pop();
+    var page = window.location.pathname.split('/').pop().replace('.html', '');
 
-    // Fetch the correct JSON file based on the current page
-    if (urlMap[currentPage]) {
-        $.getJSON(urlMap[currentPage], function(data) {
+    if (urls[page]) {
+        $.getJSON(urls[page], function(data) {
             var htmlContent = '';
 
-            // Process data based on the type of JSON file
-            if (currentPage === 'google-books-book.html') {
-                htmlContent += '<h2>' + data.volumeInfo.title + '</h2>';
-                htmlContent += '<p><strong>Author:</strong> ' + (data.volumeInfo.authors || []).join(', ') + '</p>';
-                htmlContent += '<p><strong>Published Date:</strong> ' + data.volumeInfo.publishedDate + '</p>';
-                htmlContent += '<p><strong>Description:</strong> ' + data.volumeInfo.description + '</p>';
-                htmlContent += '<img src="' + data.volumeInfo.imageLinks.thumbnail + '" alt="Book Cover">';
-            } else if (currentPage === 'google-books-search.html') {
-                data.items.forEach(function(book) {
-                    htmlContent += '<h2>' + book.volumeInfo.title + '</h2>';
-                    htmlContent += '<p><strong>Author:</strong> ' + (book.volumeInfo.authors || []).join(', ') + '</p>';
-                    htmlContent += '<p><strong>Published Date:</strong> ' + book.volumeInfo.publishedDate + '</p>';
-                    htmlContent += '<p><strong>Description:</strong> ' + book.volumeInfo.description + '</p>';
-                    htmlContent += '<img src="' + book.volumeInfo.imageLinks.thumbnail + '" alt="Book Cover">';
-                });
-            } else if (currentPage === 'it-ebooks-search.html') {
-                data.books.forEach(function(book) {
-                    htmlContent += '<h2>' + book.title + '</h2>';
-                    htmlContent += '<p><strong>Author:</strong> ' + book.author + '</p>';
-                    htmlContent += '<p><strong>Published Date:</strong> ' + book.year + '</p>';
-                    htmlContent += '<p><strong>Description:</strong> ' + book.description + '</p>';
-                    htmlContent += '<img src="' + book.image + '" alt="Book Cover">';
-                });
-            } else if (currentPage === 'openlibrary-book.html') {
-                htmlContent += '<h2>' + data.title + '</h2>';
-                htmlContent += '<p><strong>Author:</strong> ' + (data.authors || []).map(a => a.name).join(', ') + '</p>';
-                htmlContent += '<p><strong>Published Date:</strong> ' + data.publish_date + '</p>';
-                htmlContent += '<p><strong>Description:</strong> ' + data.description + '</p>';
-                htmlContent += '<img src="' + data.cover.medium + '" alt="Book Cover">';
-            } else if (currentPage === 'openlibrary-search.html') {
-                data.docs.forEach(function(book) {
-                    htmlContent += '<h2>' + book.title + '</h2>';
-                    htmlContent += '<p><strong>Author:</strong> ' + (book.author_name || []).join(', ') + '</p>';
-                    htmlContent += '<p><strong>Published Date:</strong> ' + (book.publish_date || []).join(', ') + '</p>';
-                    htmlContent += '<p><strong>Description:</strong> ' + (book.first_sentence ? book.first_sentence[0] : 'No description available') + '</p>';
-                    htmlContent += '<img src="' + (book.cover_i ? 'https://covers.openlibrary.org/b/id/' + book.cover_i + '-M.jpg' : '') + '" alt="Book Cover">';
+            if (page === 'google-books-book' || page === 'openlibrary-book') {
+                var book = data;
+                htmlContent += '<h2>' + book.title + '</h2>';
+                htmlContent += '<p><strong>Author:</strong> ' + (book.authors || []).map(author => author.name || author).join(', ') + '</p>';
+                htmlContent += '<p><strong>Publisher:</strong> ' + (book.publishers || []).map(publisher => publisher.name || publisher).join(', ') + '</p>';
+                htmlContent += '<p><strong>Published Date:</strong> ' + book.publish_date + '</p>';
+                htmlContent += '<p><strong>Description:</strong> ' + (book.description || 'No description available') + '</p>';
+                htmlContent += '<img src="' + (book.cover ? book.cover.medium : 'default-cover.jpg') + '" alt="Book Cover">';
+            } else if (page === 'google-books-search' || page === 'it-ebooks-search' || page === 'openlibrary-search') {
+                var items = data.items || data.books;
+                $.each(items, function(index, item) {
+                    htmlContent += '<h2>' + item.title + '</h2>';
+                    htmlContent += '<p><strong>Author:</strong> ' + (item.authors || item.author || 'N/A') + '</p>';
+                    htmlContent += '<p><strong>Publisher:</strong> ' + (item.publisher || 'N/A') + '</p>';
+                    htmlContent += '<p><strong>Published Date:</strong> ' + (item.publishedDate || item.year || 'N/A') + '</p>';
+                    htmlContent += '<p><strong>Description:</strong> ' + (item.description || 'No description available') + '</p>';
+                    htmlContent += '<img src="' + (item.imageLinks ? item.imageLinks.thumbnail : 'default-cover.jpg') + '" alt="Book Cover">';
                 });
             }
 
-            $('#google-books-book-content').html(htmlContent);
+            $('#google-books-book-content, #openlibrary-book-data, #ebooks-results').html(htmlContent);
         }).fail(function() {
-            $('#google-books-book-content').html('<p>Failed to load data. Please try again later.</p>');
+            $('#google-books-book-content, #openlibrary-book-data, #ebooks-results').html('<p>Failed to load data. Please try again later.</p>');
         });
     } else {
-        $('#google-books-book-content').html('<p>Invalid page or no data available.</p>');
+        $('#google-books-book-content, #openlibrary-book-data, #ebooks-results').html('<p>Invalid page or data not available.</p>');
     }
 });
