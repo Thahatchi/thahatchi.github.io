@@ -7,6 +7,37 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="script.js"></script>
+    <style>
+        /* Styles to center content and format the layout */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        main {
+            padding: 20px;
+        }
+        #search-results {
+            display: inline-block;
+            text-align: left;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 20px;
+        }
+        img {
+            display: block;
+            margin: 10px auto;
+            max-width: 280px; /* Increased image size */
+            height: auto;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -26,19 +57,28 @@
 
     <script>
         $(document).ready(function() {
-$.getJSON('https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/google-books-search.json', function(data) {
-    // Your code here to process and display data
+            $.getJSON('https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/google-books-search.json', function(data) {
                 var books = data.items;
                 var html = '<ul>';
                 $.each(books, function(index, book) {
-                    html += '<li><h2>' + book.volumeInfo.title + '</h2>';
-                    html += '<p><strong>Author:</strong> ' + book.volumeInfo.authors.join(', ') + '</p>';
-                    html += '<p><strong>Publisher:</strong> ' + book.volumeInfo.publisher + '</p>';
-                    html += '<p><strong>Published Date:</strong> ' + book.volumeInfo.publishedDate + '</p>';
-                    html += '<img src="' + book.volumeInfo.imageLinks.thumbnail + '" alt="Book Image"></li>';
+                    html += '<li>';
+                    html += '<h2>' + book.volumeInfo.title + '</h2>';
+                    html += '<p><strong>Author:</strong> ' + (book.volumeInfo.authors || []).join(', ') + '</p>';
+                    html += '<p><strong>Publisher:</strong> ' + (book.volumeInfo.publisher || 'N/A') + '</p>';
+                    html += '<p><strong>Published Date:</strong> ' + (book.volumeInfo.publishedDate || 'N/A') + '</p>';
+                    html += '<p><strong>Page Count:</strong> ' + (book.volumeInfo.pageCount || 'N/A') + ' pages</p>';
+                    html += '<p><strong>Categories:</strong> ' + (book.volumeInfo.categories || []).join(', ') + '</p>';
+                    html += '<p><strong>Language:</strong> ' + (book.volumeInfo.language || 'N/A') + '</p>';
+                    html += '<p><strong>Average Rating:</strong> ' + (book.volumeInfo.averageRating || 'N/A') + '</p>';
+                    html += '<p><strong>Ratings Count:</strong> ' + (book.volumeInfo.ratingsCount || 'N/A') + '</p>';
+                    html += '<p><strong>Description:</strong> ' + (book.volumeInfo.description || 'No description available') + '</p>';
+                    html += '<img src="' + (book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : 'default-cover.jpg') + '" alt="Book Cover">';
+                    html += '</li>';
                 });
                 html += '</ul>';
                 $('#search-results').html(html);
+            }).fail(function() {
+                $('#search-results').html('<p>Failed to load data. Please try again later.</p>');
             });
         });
     </script>
