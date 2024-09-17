@@ -1,96 +1,80 @@
 $(document).ready(function() {
-    // Function to display content for Google Books Book
-    function displayGoogleBooksBook() {
-        $.getJSON('https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/google-books-book.json', function(data) {
-            var htmlContent = '<h2>' + data.volumeInfo.title + '</h2>';
-            htmlContent += '<p><strong>Author:</strong> ' + data.volumeInfo.authors.join(', ') + '</p>';
-            htmlContent += '<p><strong>Published Date:</strong> ' + data.volumeInfo.publishedDate + '</p>';
-            htmlContent += '<p><strong>Description:</strong> ' + data.volumeInfo.description + '</p>';
-            htmlContent += '<img src="' + data.volumeInfo.imageLinks.thumbnail + '" alt="Book Cover">';
+    let currentSlide = 0;
+    const slides = ['#slide1', '#slide2', '#slide3', '#slide4', '#slide5'];
+    
+    function fetchAndDisplayData(url, slideIndex) {
+        $.getJSON(url, function(data) {
+            let htmlContent = '';
             
-            $('#slide1').html(htmlContent);
+            if (url.includes('google-books-book.json')) {
+                htmlContent += '<h2>' + data.volumeInfo.title + '</h2>';
+                htmlContent += '<p><strong>Author:</strong> ' + data.volumeInfo.authors.join(', ') + '</p>';
+                htmlContent += '<p><strong>Published Date:</strong> ' + data.volumeInfo.publishedDate + '</p>';
+                htmlContent += '<p><strong>Description:</strong> ' + data.volumeInfo.description + '</p>';
+                htmlContent += '<img src="' + data.volumeInfo.imageLinks.thumbnail + '" alt="Book Cover">';
+            } else if (url.includes('google-books-search.json')) {
+                data.items.forEach(item => {
+                    htmlContent += '<h2>' + item.volumeInfo.title + '</h2>';
+                    htmlContent += '<p><strong>Author:</strong> ' + item.volumeInfo.authors.join(', ') + '</p>';
+                    htmlContent += '<p><strong>Published Date:</strong> ' + item.volumeInfo.publishedDate + '</p>';
+                    htmlContent += '<p><strong>Description:</strong> ' + item.volumeInfo.description + '</p>';
+                    htmlContent += '<img src="' + item.volumeInfo.imageLinks.thumbnail + '" alt="Book Cover">';
+                });
+            } else if (url.includes('it-ebooks-search.json')) {
+                data.books.forEach(book => {
+                    htmlContent += '<h2>' + book.title + '</h2>';
+                    htmlContent += '<p><strong>Author:</strong> ' + book.author + '</p>';
+                    htmlContent += '<p><strong>Publisher:</strong> ' + book.publisher + '</p>';
+                    htmlContent += '<p><strong>Description:</strong> ' + book.description + '</p>';
+                    htmlContent += '<img src="' + book.image + '" alt="Book Cover">';
+                });
+            } else if (url.includes('openlibrary-book.json')) {
+                htmlContent += '<h2>' + data.title + '</h2>';
+                htmlContent += '<p><strong>Author:</strong> ' + data.authors.map(author => author.name).join(', ') + '</p>';
+                htmlContent += '<p><strong>Published Date:</strong> ' + data.publish_date + '</p>';
+                htmlContent += '<p><strong>Description:</strong> ' + data.excerpts[0].text + '</p>';
+                htmlContent += '<img src="' + data.cover.medium + '" alt="Book Cover">';
+            } else if (url.includes('openlibrary-search.json')) {
+                data.docs.forEach(doc => {
+                    htmlContent += '<h2>' + doc.title + '</h2>';
+                    htmlContent += '<p><strong>Author:</strong> ' + doc.author_name.join(', ') + '</p>';
+                    htmlContent += '<p><strong>Published Date:</strong> ' + doc.first_publish_year + '</p>';
+                    htmlContent += '<p><strong>Description:</strong> ' + (doc.first_sentence ? doc.first_sentence[0] : 'No description available') + '</p>';
+                    htmlContent += '<img src="https://covers.openlibrary.org/b/id/' + doc.cover_i + '-M.jpg" alt="Book Cover">';
+                });
+            }
+
+            $(slides[slideIndex]).html(htmlContent);
+            showSlide(currentSlide);
+        }).fail(function() {
+            console.log('Failed to load data from:', url);
         });
     }
 
-    // Function to display content for Google Books Search
-    function displayGoogleBooksSearch() {
-        $.getJSON('https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/google-books-search.json', function(data) {
-            var htmlContent = '<h2>Search Results</h2>';
-            data.items.forEach(function(item) {
-                htmlContent += '<h3>' + item.volumeInfo.title + '</h3>';
-                htmlContent += '<p><strong>Author:</strong> ' + item.volumeInfo.authors.join(', ') + '</p>';
-                htmlContent += '<img src="' + item.volumeInfo.imageLinks.thumbnail + '" alt="Book Cover">';
-            });
-
-            $('#slide2').html(htmlContent);
-        });
+    function showSlide(index) {
+        $('.slide').hide();
+        $(slides[index]).show();
     }
 
-    // Function to display content for IT Ebooks Search
-    function displayITBooksSearch() {
-        $.getJSON('https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/it-ebooks-search.json', function(data) {
-            var htmlContent = '<h2>IT Ebooks Search Results</h2>';
-            data.books.forEach(function(book) {
-                htmlContent += '<h3>' + book.title + '</h3>';
-                htmlContent += '<p><strong>Author:</strong> ' + book.author + '</p>';
-                htmlContent += '<img src="' + book.cover + '" alt="Book Cover">';
-            });
-
-            $('#slide3').html(htmlContent);
-        });
+    function plusSlides(n) {
+        currentSlide += n;
+        if (currentSlide >= slides.length) {
+            currentSlide = 0;
+        } else if (currentSlide < 0) {
+            currentSlide = slides.length - 1;
+        }
+        showSlide(currentSlide);
     }
 
-    // Function to display content for Open Library Book
-    function displayOpenLibraryBook() {
-        $.getJSON('https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/openlibrary-book.json', function(data) {
-            var htmlContent = '<h2>' + data.title + '</h2>';
-            htmlContent += '<p><strong>Author:</strong> ' + data.authors.map(author => author.name).join(', ') + '</p>';
-            htmlContent += '<p><strong>Published Date:</strong> ' + data.publish_date + '</p>';
-            htmlContent += '<p><strong>Description:</strong> ' + data.description + '</p>';
-            htmlContent += '<img src="' + data.cover.large + '" alt="Book Cover">';
-            
-            $('#slide4').html(htmlContent);
-        });
-    }
+    // Fetch data for each slide
+    fetchAndDisplayData('https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/google-books-book.json', 0);
+    fetchAndDisplayData('https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/google-books-search.json', 1);
+    fetchAndDisplayData('https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/it-ebooks-search.json', 2);
+    fetchAndDisplayData('https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/openlibrary-book.json', 3);
+    fetchAndDisplayData('https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/openlibrary-search.json', 4);
 
-    // Function to display content for Open Library Search
-    function displayOpenLibrarySearch() {
-        $.getJSON('https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/openlibrary-search.json', function(data) {
-            var htmlContent = '<h2>Open Library Search Results</h2>';
-            data.docs.forEach(function(doc) {
-                htmlContent += '<h3>' + doc.title + '</h3>';
-                htmlContent += '<p><strong>Author:</strong> ' + doc.author_name.join(', ') + '</p>';
-                htmlContent += '<p><strong>First Published:</strong> ' + doc.first_publish_year + '</p>';
-            });
+    // Initialize the slideshow
+    showSlide(currentSlide);
 
-            $('#slide5').html(htmlContent);
-        });
-    }
-
-    // Slideshow functionality
-    var slideIndex = 1;
-    showSlides(slideIndex);
-
-    $('.prev').click(function() {
-        showSlides(slideIndex -= 1);
-    });
-
-    $('.next').click(function() {
-        showSlides(slideIndex += 1);
-    });
-
-    function showSlides(n) {
-        var slides = $('.slide');
-        if (n > slides.length) { slideIndex = 1 }
-        if (n < 1) { slideIndex = slides.length }
-        slides.hide();
-        $(slides[slideIndex-1]).show();
-    }
-
-    // Load initial content
-    displayGoogleBooksBook();
-    displayGoogleBooksSearch();
-    displayITBooksSearch();
-    displayOpenLibraryBook();
-    displayOpenLibrarySearch();
-});
+    // Attach event handlers to navigation arrows
+    wind
