@@ -1,1 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Milestone 1</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+
+        .tab button {
+            background-color: #ddd;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+        }
+
+        .tab button:hover {
+            background-color: #bbb;
+        }
+
+        .tabcontent {
+            display: none;
+            padding: 20px;
+            border-top: none;
+        }
+
+        .tabcontent iframe {
+            width: 100%;
+            height: 600px; /* Adjust height as needed */
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'GoogleBooksBook')">Google Books Book</button>
+        <button class="tablinks" onclick="openTab(event, 'GoogleBooksSearch')">Google Books Search</button>
+        <button class="tablinks" onclick="openTab(event, 'ITBooksSearch')">IT E-Books Search</button>
+        <button class="tablinks" onclick="openTab(event, 'OpenLibraryBook')">Open Library Book</button>
+        <button class="tablinks" onclick="openTab(event, 'OpenLibrarySearch')">Open Library Search</button>
+    </div>
+
+    <div id="GoogleBooksBook" class="tabcontent">
+        <iframe src="google-books-book.html"></iframe>
+    </div>
+
+    <div id="GoogleBooksSearch" class="tabcontent">
+        <iframe src="google-books-search.html"></iframe>
+    </div>
+
+    <div id="ITBooksSearch" class="tabcontent">
+        <iframe src="it-ebooks-search.html"></iframe>
+    </div>
+
+    <div id="OpenLibraryBook" class="tabcontent">
+        <iframe src="openlibrary-book.html"></iframe>
+    </div>
+
+    <div id="OpenLibrarySearch" class="tabcontent">
+       
 
