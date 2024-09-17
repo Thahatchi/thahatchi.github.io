@@ -28,7 +28,8 @@
 
     <script>
         $(document).ready(function() {
-            $.getJSON('https://raw.githubusercontent.com/username/repository/main/google-books-search.json', function(data) {
+$.getJSON('https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/google-books-search.json', function(data) {
+    // Your code here to process and display data
                 var books = data.items;
                 var html = '<ul>';
                 $.each(books, function(index, book) {
