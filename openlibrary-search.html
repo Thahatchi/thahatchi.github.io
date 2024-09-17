@@ -27,7 +27,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            $.getJSON('openlibrary-search.json', function(data) {
+                $.getJSON('https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/openlibrary-search.json', function(data) {
                 const books = data.books;
                 let html = '<ul>';
                 books.forEach(book => {
