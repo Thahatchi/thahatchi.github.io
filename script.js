@@ -22,14 +22,14 @@ $(document).ready(function() {
                 htmlContent += '<p><strong>Description:</strong> ' + (book.description || 'No description available') + '</p>';
                 htmlContent += '<img src="' + (book.cover ? book.cover.medium : 'default-cover.jpg') + '" alt="Book Cover">';
             } else if (page === 'google-books-search' || page === 'it-ebooks-search' || page === 'openlibrary-search') {
-                var items = data.items || data.books;
+                var items = data.books || data.items;
                 $.each(items, function(index, item) {
                     htmlContent += '<h2>' + item.title + '</h2>';
-                    htmlContent += '<p><strong>Author:</strong> ' + (item.authors || item.author || 'N/A') + '</p>';
+                    htmlContent += '<p><strong>Author:</strong> ' + (item.author || item.authors || 'N/A') + '</p>';
                     htmlContent += '<p><strong>Publisher:</strong> ' + (item.publisher || 'N/A') + '</p>';
                     htmlContent += '<p><strong>Published Date:</strong> ' + (item.publishedDate || item.year || 'N/A') + '</p>';
                     htmlContent += '<p><strong>Description:</strong> ' + (item.description || 'No description available') + '</p>';
-                    htmlContent += '<img src="' + (item.imageLinks ? item.imageLinks.thumbnail : 'default-cover.jpg') + '" alt="Book Cover">';
+                    htmlContent += '<img src="' + (item.cover || 'default-cover.jpg') + '" alt="Book Cover">';
                 });
             }
 
@@ -41,3 +41,4 @@ $(document).ready(function() {
         $('#google-books-book-content, #openlibrary-book-data, #ebooks-results').html('<p>Invalid page or data not available.</p>');
     }
 });
+
