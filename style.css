@@ -1,9 +1,8 @@
-/* Navbar styles */
 .navbar ul {
     list-style-type: none;
     background-color: hsl(0, 0%, 0%);
     padding: 20px;
-    margin: 0px;
+    margin: 0;
     overflow: hidden;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
@@ -24,32 +23,28 @@
     float: left;
 }
 
-/* Ensure the body and html take up the full height of the viewport */
 html, body {
     height: 100%;
     margin: 0;
 }
 
-/* Use Flexbox to make the body a column layout */
 body {
     display: flex;
     flex-direction: column;
 }
 
-/* Make the main content area take up available space */
 main {
     flex: 1;
 }
 
-/* Existing footer styles */
 footer {
     position: fixed;
     bottom: 0;
     width: 100%;
-    background-color: #f1f1f1; /* You can change the color */
+    background-color: #f1f1f1;
     text-align: center;
     padding: 10px 0;
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.1); /* Optional shadow effect */
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
 }
 
 h1 {
@@ -61,41 +56,19 @@ h1 {
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
-.center {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 50%;
-}
-
-.image-container {
-    text-align: center; /* Center align the contents */
-}
-
-.image-container img {
-    max-width: 25%; /* Set maximum width to ensure image isn't scrunched */
-    height: auto; /* Maintain aspect ratio */
-}
-
-.image-container h3 {
-    margin-top: 10px; /* Add some spacing between the image and the text */
-}
-
-/* Slideshow container */
 .slideshow-container {
     position: relative;
     max-width: 100%;
     margin: auto;
+    overflow: hidden;
 }
 
-/* Slides */
 .slide {
     display: none;
     padding: 20px;
-    background: #f1f1f1; /* Adjust as needed */
+    text-align: center;
 }
 
-/* Navigation arrows */
 .prev, .next {
     cursor: pointer;
     position: absolute;
@@ -109,6 +82,7 @@ h1 {
     transition: 0.6s ease;
     border-radius: 0 3px 3px 0;
     user-select: none;
+    background-color: rgba(0,0,0,0.5);
 }
 
 .next {
@@ -118,4 +92,9 @@ h1 {
 
 .prev:hover, .next:hover {
     background-color: rgba(0,0,0,0.8);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
 }
