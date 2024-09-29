@@ -30,8 +30,9 @@
 
     <script>
         $(document).ready(function() {
-            const bookId = '5wBQEp6ruIAC'; // Your specific Book ID
-
+            const urlParams = new URLSearchParams(window.location.search);
+            const bookId = urlParams.get('bookId'); // Get the bookId from URL
+            
             // Fetch book details from the Google Books API
             const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}?key=AIzaSyC2lPVELazlhLT8Nr66xG_HLruUBHP-CLo`;
 
@@ -41,6 +42,26 @@
                 const publisher = data.volumeInfo.publisher || 'Unknown';
                 const description = data.volumeInfo.description || 'No description available.';
                 const thumbnail = data.volumeInfo.imageLinks ? data.volumeInfo.imageLinks.thumbnail : 'placeholder-image-url';
+
+                // Hardcode book details for specific books
+                if (bookId === '5wBQEp6ruIAC') {
+                    // Details for "The Pragmatic Programmer"
+                    const description = "A guide to software craftsmanship and practical programming techniques.";
+                } else if (bookId === 'Wfan6L9RGgYC') {
+                    // Details for "The Modern Web"
+                    const title = "The Modern Web";
+                    const authors = "Mike West, et al.";
+                    const publisher = "O'Reilly Media";
+                    const description = "An introduction to web development and modern web technologies.";
+                    const thumbnail = "https://books.google.com/books/content?id=Wfan6L9RGgYC&printsec=frontcover&img=1&zoom=1&source=gbs_api";
+                } else if (bookId === 'YJKbVzeabJYC') {
+                    // Details for the second book
+                    const title = "Another Book Title";
+                    const authors = "Author Name";
+                    const publisher = "Publisher Name";
+                    const description = "Description of the second book.";
+                    const thumbnail = "https://books.google.com/books/content?id=YJKbVzeabJYC&printsec=frontcover&img=1&zoom=1&source=gbs_api";
+                }
 
                 $('#book-details').append(`
                     <h2>${title}</h2>
