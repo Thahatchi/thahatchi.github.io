@@ -1,1 +1,59 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <title>My Bookshelf | IT 4403 Project</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="bookshelf.html">My Bookshelf</a></li>
+        </ul>
+    </nav>
+    
+    <!-- Main Content -->
+    <main>
+        <h1>My Bookshelf</h1>
+        <section id="bookshelf-section">
+            <div id="bookshelf-results"></div> <!-- For displaying bookshelf results -->
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Kevin Co. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        $(document).ready(function() {
+            // Fetch books from the public bookshelf using the Google Books API
+            const bookshelfId = 'YOUR_SHELF_ID'; // Replace with your actual bookshelf ID
+            const userId = 'YOUR_USER_ID'; // Replace with your actual user ID
+            const apiUrl = `https://www.googleapis.com/books/v1/users/${userId}/bookshelves/${bookshelfId}/volumes`;
+
+            $.getJSON(apiUrl, function(data) {
+                $('#bookshelf-results').empty(); // Clear previous results
+                if (data.items) {
+                    data.items.forEach(item => {
+                        const title = item.volumeInfo.title;
+                        const thumbnail = item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'placeholder-image-url';
+                        $('#bookshelf-results').append(`
+                            <div>
+                                <h3><a href="book-details.html?bookId=${item.id}">${title}</a></h3>
+                                <img src="${thumbnail}" alt="${title}" />
+                            </div>
+                        `);
+                    });
+                } else {
+                    $('#bookshelf-results').append('<p>No books found in your bookshelf.</p>');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
