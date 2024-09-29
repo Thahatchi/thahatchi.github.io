@@ -1,1 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <title>Book Details | IT 4403 Project</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="bookshelf.html">My Bookshelf</a></li>
+        </ul>
+    </nav>
+    
+    <!-- Main Content -->
+    <main>
+        <h1>Book Details</h1>
+        <section id="book-details-section">
+            <div id="book-details"></div> <!-- For displaying book details -->
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Kevin Co. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        $(document).ready(function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const bookId = urlParams.get('bookId'); // Get the bookId from URL
+            
+            // Fetch book details from the Google Books API
+            const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}`;
+
+            $.getJSON(apiUrl, function(data) {
+                const title = data.volumeInfo.title;
+                const authors = data.volumeInfo.authors ? data.volumeInfo.authors.join(', ') : 'Unknown';
+                const publisher = data.volumeInfo.publisher || 'Unknown';
+                const description = data.volumeInfo.description || 'No description available.';
+                const thumbnail = data.volumeInfo.imageLinks ? data.volumeInfo.imageLinks.thumbnail : 'placeholder-image-url';
+
+                $('#book-details').append(`
+                    <h2>${title}</h2>
+                    <h3>Authors: ${authors}</h3>
+                    <h4>Publisher: ${publisher}</h4>
+                    <img src="${thumbnail}" alt="${title}" />
+                    <p>${description}</p>
+                `);
+            });
+        });
+    </script>
+</body>
+</html>
 
