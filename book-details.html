@@ -30,11 +30,10 @@
 
     <script>
         $(document).ready(function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const bookId = urlParams.get('bookId'); // Get the bookId from URL
-            
+            const bookId = '5wBQEp6ruIAC'; // Your specific Book ID
+
             // Fetch book details from the Google Books API
-            const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}`;
+            const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}?key=AIzaSyC2lPVELazlhLT8Nr66xG_HLruUBHP-CLo`;
 
             $.getJSON(apiUrl, function(data) {
                 const title = data.volumeInfo.title;
@@ -55,4 +54,3 @@
     </script>
 </body>
 </html>
-
