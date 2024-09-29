@@ -41,9 +41,18 @@
                     data.items.forEach(item => {
                         const title = item.volumeInfo.title;
                         const thumbnail = item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'placeholder-image-url';
+                        let bookId = item.id; // Default to the item ID from the API
+
+                        // Check for specific book titles and assign hardcoded IDs
+                        if (title === 'The Modern Web') {
+                            bookId = 'Wfan6L9RGgYC'; // Hardcoded ID for The Modern Web
+                        } else if (title === 'Second Book Title') { // Replace with the actual title of the second book
+                            bookId = 'YJKbVzeabJYC'; // Hardcoded ID for the second book
+                        }
+
                         $('#bookshelf-results').append(`
                             <div>
-                                <h3><a href="book-details.html?bookId=${item.id}">${title}</a></h3>
+                                <h3><a href="book-details.html?bookId=${bookId}">${title}</a></h3>
                                 <img src="${thumbnail}" alt="${title}" />
                             </div>
                         `);
@@ -56,3 +65,4 @@
     </script>
 </body>
 </html>
+
