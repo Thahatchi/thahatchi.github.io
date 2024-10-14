@@ -62,11 +62,9 @@
                         setupPagination(data.totalItems, query);
                     } else {
                         $('#results').empty().append('<p>No results found.</p>');
-                        $('#pagination').empty(); // Clear pagination if no results
                     }
                 }).fail(function() {
                     $('#results').empty().append('<p>Error retrieving data. Please try again.</p>');
-                    $('#pagination').empty(); // Clear pagination on error
                 });
             }
 
@@ -84,3 +82,57 @@
 
                 // Add click event to display book details
                 $('.result-item').click(function() {
+                    const bookId = $(this).data('id');
+                    const title = $(this).data('title');
+                    const thumbnail = $(this).data('thumbnail');
+                    displayBookDetails(bookId, title, thumbnail);
+                });
+            }
+
+            // Function to set up pagination
+            function setupPagination(totalItems, query) {
+                const totalPages = Math.ceil(totalItems / resultsPerPage);
+                $('#pagination').empty();
+                for (let i = 1; i <= totalPages; i++) {
+                    $('#pagination').append(`<span class="page-number">${i}</span>`);
+                }
+                $('.page-number').click(function() {
+                    currentPage = $(this).text();
+                    searchBooks(query, currentPage);
+                });
+            }
+
+            // Display detailed information about the selected book
+            function displayBookDetails(bookId, title, thumbnail) {
+                const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}?key=${apiKey}`;
+                $.getJSON(apiUrl, function(data) {
+                    $('#book-details').empty();
+                    const authors = data.volumeInfo.authors ? data.volumeInfo.authors.join(', ') : 'Unknown Author';
+                    const description = data.volumeInfo.description ? data.volumeInfo.description : 'No description available.';
+                    $('#book-details').append(`
+                        <h3>${title}</h3>
+                        <img src="${thumbnail}" alt="${title}" />
+                        <p><strong>Authors:</strong> ${authors}</p>
+                        <p><strong>Description:</strong> ${description}</p>
+                    `);
+                    $('#book-details-section').show();
+                }).fail(function() {
+                    $('#book-details').empty().append('<p>Error retrieving book details. Please try again.</p>');
+                    $('#book-details-section').show();
+                });
+            }
+
+            // Search button click event
+            $('#search-button').click(function() {
+                const query = $('#search-input').val();
+                if (query) {
+                    currentPage = 1; // Reset to first page
+                    searchBooks(query);
+                } else {
+                    $('#results').empty().append('<p>Please enter a search term.</p>');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
