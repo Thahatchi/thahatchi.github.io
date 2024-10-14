@@ -1,82 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Search Application</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
+    <title>Book Search | IT 4403 Project</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+    <!-- Navigation Bar -->
     <nav class="navbar">
         <ul>
-            <li><a href="#search-section">Home</a></li>
-            <li><a href="#results-section">Results</a></li>
-            <li><a href="#pagination">Pagination</a></li>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="bookshelf.html">My Bookshelf</a></li>
         </ul>
     </nav>
-
+    
+    <!-- Main Content -->
     <main>
+        <h1>Welcome to the Book Search Application</h1>
+        
+        <!-- Book Search Section -->
         <section id="search-section">
-            <input type="text" id="search-input" placeholder="Search for books...">
+            <input type="text" id="search-input" placeholder="Enter book title or keyword" />
             <button id="search-button">Search</button>
         </section>
-
+        
+        <!-- Results Display Section -->
         <section id="results-section">
+            <h2>Search Results</h2>
             <div id="results"></div>
-            <div id="pagination"></div> <!-- Pagination section -->
+            <div id="pagination"></div>
+        </section>
+
+        <!-- Book Details Section -->
+        <section id="book-details-section" style="display:none;">
+            <h2>Book Details</h2>
+            <div id="book-details"></div>
+            <button id="save-to-bookshelf" style="display:none;">Save to Bookshelf</button> <!-- Save button -->
         </section>
     </main>
 
+    <!-- Footer -->
     <footer>
-        <p>&copy; 2024 Book Search Application</p>
+        <p>&copy; 2024 Kevin Co. All Rights Reserved.</p>
     </footer>
 
     <script>
         $(document).ready(function() {
-            const apiKey = 'AiZSyC2lPVELazlhLT8Nr66xG_HLruUBHP-CLo';
-            const booksPerPage = 10; // Number of books per page
+            let currentPage = 1;
+            const resultsPerPage = 10;
+            const apiKey = 'AIzaSyC2lPVELazlhLT8Nr66xG_HLruUBHP-CLo'; // Your API Key
 
-            $('#search-button').on('click', function() {
-                const query = $('#search-input').val();
-                fetchBooks(query);
-            });
+            // Function to search for books
+            function searchBooks(query, page = 1) {
+                const startIndex = (page - 1) * resultsPerPage;
+                const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${startIndex}&maxResults=${resultsPerPage}&key=${apiKey}`;
 
-            function fetchBooks(query, page = 1) {
-                const startIndex = (page - 1) * booksPerPage;
-                $.get(`https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${startIndex}&maxResults=${booksPerPage}&key=${apiKey}`, function(data) {
-                    displayResults(data);
-                    setupPagination(data.totalItems, page);
+                $.getJSON(url, function(data) {
+                    if (data.items) {
+                        displayBooks(data.items);
+                        setupPagination(data.totalItems, query);
+                    } else {
+                        $('#results').empty().append('<p>No results found.</p>');
+                        $('#pagination').empty(); // Clear pagination if no results
+                    }
+                }).fail(function() {
+                    $('#results').empty().append('<p>Error retrieving data. Please try again.</p>');
+                    $('#pagination').empty(); // Clear pagination on error
                 });
             }
 
-            function displayResults(data) {
-                $('#results').empty(); // Clear previous results
-                data.items.forEach(item => {
-                    const bookDiv = $(`
-                        <div>
-                            <h3>${item.volumeInfo.title}</h3>
-                            <img src="${item.volumeInfo.imageLinks?.thumbnail}" alt="${item.volumeInfo.title}">
-                            <p>${item.volumeInfo.description || 'No description available.'}</p>
-                        </div>
-                    `);
-                    $('#results').append(bookDiv);
+            // Function to display books
+            function displayBooks(books) {
+                $('#results').empty();
+                books.forEach(book => {
+                    const title = book.volumeInfo.title || 'No Title';
+                    const cover = book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : 'images/no-image.jpg';
+                    $('#results').append(`<div class="result-item" data-id="${book.id}" data-title="${title}" data-thumbnail="${cover}">
+                        <h3>${title}</h3>
+                        <img src="${cover}" alt="${title}" />
+                    </div>`);
                 });
-            }
 
-            function setupPagination(totalItems, currentPage) {
-                $('#pagination').empty(); // Clear previous pagination
-                const totalPages = Math.ceil(totalItems / booksPerPage);
-                for (let i = 1; i <= totalPages; i++) {
-                    const pageLink = $(`<a href="#" class="page-number${i === currentPage ? ' active' : ''}">${i}</a>`);
-                    pageLink.on('click', function(event) {
-                        event.preventDefault();
-                        fetchBooks($('#search-input').val(), i);
-                    });
-                    $('#pagination').append(pageLink);
-                }
-            }
-        });
-    </script>
-</body>
-</html>
+                // Add click event to display book details
+                $('.result-item').click(function() {
