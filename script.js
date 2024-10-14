@@ -1,30 +1,80 @@
 $(document).ready(function() {
-    // Search for books
+    let currentPage = 1;
+    const resultsPerPage = 10;
+    const apiKey = 'AIzaSyC2lPVELazlhLT8Nr66xG_HLruUBHP-CLo'; // Your API Key
+
+    // Function to search for books
+    function searchBooks(query, page = 1) {
+        const startIndex = (page - 1) * resultsPerPage;
+        const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${startIndex}&maxResults=${resultsPerPage}&key=${apiKey}`;
+
+        $.getJSON(url, function(data) {
+            displayBooks(data.items);
+            setupPagination(data.totalItems, query);
+        });
+    }
+
+    // Function to display books
+    function displayBooks(books) {
+        $('#results').empty();
+        if (books) {
+            books.forEach(book => {
+                const title = book.volumeInfo.title || 'No Title';
+                const cover = book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : 'images/no-image.jpg';
+                $('#results').append(`<div class="result-item" data-id="${book.id}" data-title="${title}" data-thumbnail="${cover}">
+                    <h3>${title}</h3>
+                    <img src="${cover}" alt="${title}" />
+                </div>`);
+            });
+
+            // Add click event to display book details
+            $('.result-item').click(function() {
+                const bookId = $(this).data('id');
+                const title = $(this).data('title');
+                const thumbnail = $(this).data('thumbnail');
+                displayBookDetails(bookId, title, thumbnail);
+            });
+        } else {
+            $('#results').append('<p>No results found.</p>');
+        }
+    }
+
+    // Function to set up pagination
+    function setupPagination(totalItems, query) {
+        const totalPages = Math.ceil(totalItems / resultsPerPage);
+        $('#pagination').empty();
+        for (let i = 1; i <= totalPages; i++) {
+            $('#pagination').append(`<span class="page-number">${i}</span>`);
+        }
+        $('.page-number').click(function() {
+            currentPage = $(this).text();
+            searchBooks(query, currentPage);
+        });
+    }
+
+    // Display detailed information about the selected book
+    function displayBookDetails(bookId, title, thumbnail) {
+        const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}?key=${apiKey}`;
+        $.getJSON(apiUrl, function(data) {
+            $('#book-details').empty();
+            const authors = data.volumeInfo.authors ? data.volumeInfo.authors.join(', ') : 'Unknown Author';
+            const description = data.volumeInfo.description ? data.volumeInfo.description : 'No description available.';
+            $('#book-details').append(`
+                <h3>${title}</h3>
+                <img src="${thumbnail}" alt="${title}" />
+                <p><strong>Authors:</strong> ${authors}</p>
+                <p><strong>Description:</strong> ${description}</p>
+            `);
+            $('#book-details-section').show();
+        });
+    }
+
+    // Search button click event
     $('#search-button').click(function() {
         const query = $('#search-input').val();
-        console.log('Search Query:', query); // Log the query to the console
-        const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=5`;
-
-        $.getJSON(apiUrl, function(data) {
-            console.log('Search Results:', data); // Log the returned data
-            $('#results').empty(); // Clear previous results
-
-            if (data.items) {
-                data.items.forEach(item => {
-                    const title = item.volumeInfo.title;
-                    const thumbnail = item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'placeholder-image-url';
-                    $('#results').append(`
-                        <div class="result-item">
-                            <h3>${title}</h3>
-                            <img src="${thumbnail}" alt="${title}" />
-                        </div>
-                    `);
-                });
-            } else {
-                $('#results').append('<p>No results found.</p>');
-            }
-        }).fail(function() {
-            $('#results').append('<p>Error fetching data. Please try again.</p>');
-        });
+        if (query) {
+            currentPage = 1; // Reset to first page
+            searchBooks(query);
+        }
     });
 });
