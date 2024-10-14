@@ -59,12 +59,14 @@
                 $.getJSON(url, function(data) {
                     if (data.items) {
                         displayBooks(data.items);
-                        setupPagination(data.totalItems, query);
+                        setupPagination(data.totalItems, query); // Setup pagination with total items
                     } else {
                         $('#results').empty().append('<p>No results found.</p>');
+                        $('#pagination').empty(); // Clear pagination if no results
                     }
                 }).fail(function() {
                     $('#results').empty().append('<p>Error retrieving data. Please try again.</p>');
+                    $('#pagination').empty(); // Clear pagination on error
                 });
             }
 
@@ -130,6 +132,7 @@
                     searchBooks(query);
                 } else {
                     $('#results').empty().append('<p>Please enter a search term.</p>');
+                    $('#pagination').empty(); // Clear pagination if no search term
                 }
             });
         });
