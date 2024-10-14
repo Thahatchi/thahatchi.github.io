@@ -93,4 +93,41 @@ main {
 /* Pagination */
 #pagination {
     margin-top: 20px;
-    display
+    display: flex;
+    justify-content: center; /* Center the pagination */
+    flex-wrap: wrap; /* Allow wrapping if needed */
+}
+
+.page-number {
+    margin: 0 5px;
+    padding: 10px 15px;
+    background-color: #007BFF; /* Blue background */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: inline-block; /* Display as inline-block for padding */
+}
+
+.page-number:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.page-number.active {
+    background-color: #0056b3; /* Highlight active page */
+    font-weight: bold;
+    pointer-events: none; /* Disable clicking on the active page */
+    opacity: 0.7; /* Slightly gray out the active page */
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #333;
+    color: white;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
