@@ -52,19 +52,22 @@
 
             // Function to search for books
             function searchBooks(query, page = 1) {
+                const apiKey = 'YOUR_API_KEY'; // Replace with your actual API key
                 const startIndex = (page - 1) * resultsPerPage;
-                const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${startIndex}&maxResults=${resultsPerPage}`;
+                const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&key=${apiKey}&startIndex=${startIndex}&maxResults=${resultsPerPage}`;
 
                 $.getJSON(url, function(data) {
                     displayBooks(data.items);
                     setupPagination(data.totalItems, query);
+                }).fail(function() {
+                    $('#results').empty().append('<p>Error retrieving data.</p>');
                 });
             }
 
             // Function to display books
             function displayBooks(books) {
                 $('#results').empty();
-                if (books) {
+                if (books && books.length > 0) {
                     books.forEach(book => {
                         const title = book.volumeInfo.title || 'No Title';
                         const cover = book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : 'images/no-image.jpg';
@@ -105,4 +108,29 @@
                 $.getJSON(apiUrl, function(data) {
                     $('#book-details').empty();
                     const authors = data.volumeInfo.authors ? data.volumeInfo.authors.join(', ') : 'Unknown Author';
-                    const description = data.volumeInfo.description ? data
+                    const description = data.volumeInfo.description ? data.volumeInfo.description : 'No Description Available';
+
+                    $('#book-details').append(`
+                        <h3>${title}</h3>
+                        <h4>By: ${authors}</h4>
+                        <img src="${thumbnail}" alt="${title}" />
+                        <p>${description}</p>
+                    `);
+                    $('#book-details-section').show();
+                });
+            }
+
+            // Search button click event
+            $('#search-button').on('click', function() {
+                const query = $('#search-input').val().trim();
+                if (query) {
+                    currentPage = 1; // Reset to the first page
+                    searchBooks(query, currentPage);
+                } else {
+                    alert('Please enter a search term.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
