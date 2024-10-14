@@ -43,12 +43,15 @@ $(document).ready(function() {
     function setupPagination(totalItems, query) {
         const totalPages = Math.ceil(totalItems / resultsPerPage);
         $('#pagination').empty();
+        
         for (let i = 1; i <= totalPages; i++) {
-            $('#pagination').append(`<span class="page-number">${i}</span>`);
+            $('#pagination').append(`<span class="page-number ${i === currentPage ? 'active' : ''}">${i}</span>`);
         }
+
+        // Click event for pagination
         $('.page-number').click(function() {
-            currentPage = $(this).text();
-            searchBooks(query, currentPage);
+            currentPage = parseInt($(this).text(), 10); // Get the page number from the clicked link
+            searchBooks(query, currentPage); // Perform the search for the selected page
         });
     }
 
