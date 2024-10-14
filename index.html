@@ -46,4 +46,37 @@
                 const startIndex = (page - 1) * booksPerPage;
                 $.get(`https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${startIndex}&maxResults=${booksPerPage}&key=${apiKey}`, function(data) {
                     displayResults(data);
-   
+                    setupPagination(data.totalItems, page);
+                });
+            }
+
+            function displayResults(data) {
+                $('#results').empty(); // Clear previous results
+                data.items.forEach(item => {
+                    const bookDiv = $(`
+                        <div>
+                            <h3>${item.volumeInfo.title}</h3>
+                            <img src="${item.volumeInfo.imageLinks?.thumbnail}" alt="${item.volumeInfo.title}">
+                            <p>${item.volumeInfo.description || 'No description available.'}</p>
+                        </div>
+                    `);
+                    $('#results').append(bookDiv);
+                });
+            }
+
+            function setupPagination(totalItems, currentPage) {
+                $('#pagination').empty(); // Clear previous pagination
+                const totalPages = Math.ceil(totalItems / booksPerPage);
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageLink = $(`<a href="#" class="page-number${i === currentPage ? ' active' : ''}">${i}</a>`);
+                    pageLink.on('click', function(event) {
+                        event.preventDefault();
+                        fetchBooks($('#search-input').val(), i);
+                    });
+                    $('#pagination').append(pageLink);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
