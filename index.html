@@ -5,6 +5,34 @@
     <link rel="stylesheet" href="style.css">
     <title>Book Search | IT 4403 Project</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Additional CSS for pagination */
+        #pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center; /* Center the pagination */
+        }
+
+        #pagination a {
+            margin: 0 5px;
+            padding: 10px 15px;
+            background-color: #007BFF; /* Blue background */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            display: inline-block; /* Display as inline-block for padding */
+        }
+
+        #pagination a:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        #pagination .active {
+            background-color: #0056b3; /* Highlight active page */
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -93,12 +121,16 @@
             function setupPagination(totalItems, query) {
                 const totalPages = Math.ceil(totalItems / resultsPerPage);
                 $('#pagination').empty();
+                
                 for (let i = 1; i <= totalPages; i++) {
-                    $('#pagination').append(`<span class="page-number">${i}</span>`);
+                    $('#pagination').append(`<a href="#" class="page-number ${i === currentPage ? 'active' : ''}">${i}</a>`);
                 }
-                $('.page-number').click(function() {
-                    currentPage = $(this).text();
-                    searchBooks(query, currentPage);
+
+                // Click event for pagination
+                $('.page-number').click(function(event) {
+                    event.preventDefault(); // Prevent default link behavior
+                    currentPage = parseInt($(this).text(), 10); // Get the page number from the clicked link
+                    searchBooks(query, currentPage); // Perform the search for the selected page
                 });
             }
 
