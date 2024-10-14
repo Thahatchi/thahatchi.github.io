@@ -36,6 +36,7 @@
         <section id="book-details-section" style="display:none;">
             <h2>Book Details</h2>
             <div id="book-details"></div>
+            <button id="save-to-bookshelf" style="display:none;">Save to Bookshelf</button> <!-- Save button -->
         </section>
     </main>
 
@@ -89,7 +90,7 @@
                     const title = item.volumeInfo.title;
                     const thumbnail = item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'placeholder-image-url'; // Use a placeholder if no image
                     $('#results').append(`
-                        <div class="result-item" data-id="${item.id}">
+                        <div class="result-item" data-id="${item.id}" data-title="${title}" data-thumbnail="${thumbnail}">
                             <h3>${title}</h3>
                             <img src="${thumbnail}" alt="${title}" />
                         </div>
@@ -99,18 +100,19 @@
                 // Add click event to display book details
                 $('.result-item').click(function() {
                     const bookId = $(this).data('id');
-                    displayBookDetails(bookId);
+                    const title = $(this).data('title');
+                    const thumbnail = $(this).data('thumbnail');
+                    displayBookDetails(bookId, title, thumbnail);
                 });
 
                 $('#pagination').show();
             }
 
             // Display detailed information about the selected book
-            function displayBookDetails(bookId) {
+            function displayBookDetails(bookId, title, thumbnail) {
                 const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}`;
                 $.getJSON(apiUrl, function(data) {
                     $('#book-details').empty();
-                    const title = data.volumeInfo.title;
                     const authors = data.volumeInfo.authors ? data.volumeInfo.authors.join(', ') : 'Unknown Author';
                     const description = data.volumeInfo.description ? data.volumeInfo.description : 'No description available.';
                     $('#book-details').append(`
@@ -120,5 +122,29 @@
                     `);
                     $('#book-details-section').show();
                     $('#results-section').hide();
+
+                    // Show the save button when displaying book details
+                    $('#save-to-bookshelf').data('book-info', { title, authors: data.volumeInfo.authors, thumbnail }); // Store book info in button data
+                    $('#save-to-bookshelf').show();
                 });
-   
+            }
+
+            // Save book to bookshelf
+            $('#save-to-bookshelf').click(function() {
+                const bookInfo = $(this).data('book-info');
+                const savedBooks = JSON.parse(localStorage.getItem('bookshelf')) || [];
+
+                // Check if the book is already saved
+                const isAlreadySaved = savedBooks.some(book => book.title === bookInfo.title);
+                if (isAlreadySaved) {
+                    alert('This book is already in your bookshelf.');
+                } else {
+                    savedBooks.push(bookInfo); // Add the book to saved books
+                    localStorage.setItem('bookshelf', JSON.stringify(savedBooks)); // Save to local storage
+                    alert('Book saved to your bookshelf!');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
