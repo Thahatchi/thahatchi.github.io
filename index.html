@@ -72,7 +72,7 @@
 
             // Function to display books
             function displayBooks(books) {
-                $('#results').empty();
+                $('#results').empty(); // Clear previous results
                 books.forEach(book => {
                     const title = book.volumeInfo.title || 'No Title';
                     const cover = book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : 'images/no-image.jpg';
@@ -98,9 +98,11 @@
                 for (let i = 1; i <= totalPages; i++) {
                     $('#pagination').append(`<span class="page-number" data-page="${i}">${i}</span>`);
                 }
-                $('.page-number').click(function() {
+                
+                // Add click event to page numbers
+                $('.page-number').off('click').on('click', function() { // Unbind previous events
                     currentPage = $(this).data('page'); // Get the page number from the clicked element
-                    searchBooks(query, currentPage);
+                    searchBooks(query, currentPage); // Search with the new page
                 });
             }
 
