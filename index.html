@@ -94,8 +94,19 @@
             // Function to set up pagination
             function setupPagination(totalItems, query) {
                 const totalPages = Math.ceil(totalItems / resultsPerPage);
+                const maxPageButtons = 5; // Maximum number of pagination buttons
                 $('#pagination').empty(); // Clear existing pagination
-                for (let i = 1; i <= totalPages; i++) {
+
+                // Calculate the range of pages to display
+                const startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
+                const endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
+
+                // Adjust start page if endPage is less than maxPageButtons
+                if (endPage - startPage < maxPageButtons - 1) {
+                    startPage = Math.max(1, endPage - maxPageButtons + 1);
+                }
+
+                for (let i = startPage; i <= endPage; i++) {
                     $('#pagination').append(`<span class="page-number" data-page="${i}">${i}</span>`);
                 }
                 
