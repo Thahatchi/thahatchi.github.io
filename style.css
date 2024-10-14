@@ -1,78 +1,120 @@
-.navbar ul{
-  list-style-type: none;
-  background-color: hsl(0, 0%, 0%);
-  padding: 20px;
-  margin: 0px;
-  overflow: hidden;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-}
-
-.navbar a{
-  color: rgb(255, 255, 255);
-  text-decoration: none;
-  padding: 10px;
-  display: block;
-  text-align: center;
-}
-.navbar a:hover{
-  background-color: hsl(0, 0%, 10%);
-}
-.navbar li{
-  float: left;
-}
-/* Ensure the body and html take up the full height of the viewport */
-html, body {
-    height: 100%;
+/* General Reset */
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* Use Flexbox to make the body a column layout */
 body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Navigation Bar */
+.navbar {
+    background-color: #007BFF; /* Blue background */
+    padding: 15px;
+}
+
+.navbar ul {
+    list-style-type: none;
     display: flex;
-    flex-direction: column;
+    justify-content: space-around;
 }
 
-/* Make the main content area take up available space */
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    transition: background-color 0.3s;
+}
+
+.navbar a:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Main Content */
 main {
-    flex: 1;
+    padding: 20px;
 }
 
-/* Existing footer styles */
+/* Search Section */
+#search-section {
+    margin-bottom: 20px;
+}
+
+#search-input {
+    padding: 10px;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#search-button {
+    padding: 10px 15px;
+    background-color: #28a745; /* Green background */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#search-button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+/* Results Display Section */
+#results-section {
+    margin-top: 20px;
+}
+
+#results {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#results div {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    background-color: white;
+    width: calc(30% - 20px); /* Adjust width for three columns */
+    text-align: center;
+}
+
+#results img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+/* Pagination */
+#pagination {
+    margin-top: 20px;
+}
+
+#pagination a {
+    margin: 0 5px;
+    padding: 10px 15px;
+    background-color: #007BFF;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+#pagination a:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Footer */
 footer {
-    position: fixed;
+    text-align: center;
+    padding: 20px;
+    background-color: #333;
+    color: white;
+    position: relative;
     bottom: 0;
     width: 100%;
-    background-color: #f1f1f1; /* You can change the color */
-    text-align: center;
-    padding: 10px 0;
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.1); /* Optional shadow effect */
-}
-
-h1{
-  padding: 40px;
-  text-align: center;
-  background: royalblue;
-  color: white;
-  font-size: 30px;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-}
-
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
-}
-
-.image-container {
-  text-align: center; /* Center align the contents */
-}
-
-.image-container img {
-  max-width: 25%; /* Set maximum width to ensure image isn't scrunched */
-  height: auto; /* Maintain aspect ratio */
-}
-
-.image-container h3 {
-  margin-top: 10px; /* Add some spacing between the image and the text */
 }
