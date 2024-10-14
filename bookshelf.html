@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
@@ -30,39 +30,33 @@
 
     <script>
         $(document).ready(function() {
-            // Fetch books from the public bookshelf using the Google Books API
-            const bookshelfId = '0'; // Replace with your actual bookshelf ID
-            const userId = '116163356823442712893'; // Your actual user ID from the previous steps
-            const apiUrl = `https://www.googleapis.com/books/v1/users/${userId}/bookshelves/${bookshelfId}/volumes?key=AIzaSyC2lPVELazlhLT8Nr66xG_HLruUBHP-CLo`;
-
-            $.getJSON(apiUrl, function(data) {
+            // Function to load books from local storage
+            function loadBookshelf() {
+                const savedBooks = JSON.parse(localStorage.getItem('bookshelf')) || [];
                 $('#bookshelf-results').empty(); // Clear previous results
-                if (data.items) {
-                    data.items.forEach(item => {
-                        const title = item.volumeInfo.title;
-                        const thumbnail = item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'placeholder-image-url';
-                        let bookId = item.id; // Default to the item ID from the API
 
-                        // Check for specific book titles and assign hardcoded IDs
-                        if (title === 'The Modern Web') {
-                            bookId = 'Wfan6L9RGgYC'; // Hardcoded ID for The Modern Web
-                        } else if (title === 'Second Book Title') { // Replace with the actual title of the second book
-                            bookId = 'YJKbVzeabJYC'; // Hardcoded ID for the second book
-                        }
+                if (savedBooks.length === 0) {
+                    $('#bookshelf-results').append('<p>No books found in your bookshelf.</p>');
+                } else {
+                    savedBooks.forEach(book => {
+                        const title = book.title;
+                        const authors = book.authors.join(', '); // Join authors for display
+                        const thumbnail = 'placeholder-image-url'; // Replace with a default image if needed
 
                         $('#bookshelf-results').append(`
-                            <div>
-                                <h3><a href="book-details.html?bookId=${bookId}">${title}</a></h3>
+                            <div class="book-item">
+                                <h3>${title}</h3>
+                                <p><strong>Author(s):</strong> ${authors}</p>
                                 <img src="${thumbnail}" alt="${title}" />
                             </div>
                         `);
                     });
-                } else {
-                    $('#bookshelf-results').append('<p>No books found in your bookshelf.</p>');
                 }
-            });
+            }
+
+            // Load the bookshelf on page load
+            loadBookshelf();
         });
     </script>
 </body>
 </html>
-
