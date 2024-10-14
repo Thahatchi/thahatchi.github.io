@@ -92,12 +92,12 @@
             // Function to set up pagination
             function setupPagination(totalItems, query) {
                 const totalPages = Math.ceil(totalItems / resultsPerPage);
-                $('#pagination').empty();
+                $('#pagination').empty(); // Clear existing pagination
                 for (let i = 1; i <= totalPages; i++) {
-                    $('#pagination').append(`<span class="page-number">${i}</span>`);
+                    $('#pagination').append(`<span class="page-number" data-page="${i}">${i}</span>`);
                 }
                 $('.page-number').click(function() {
-                    currentPage = $(this).text();
+                    currentPage = $(this).data('page'); // Get the page number from the clicked element
                     searchBooks(query, currentPage);
                 });
             }
