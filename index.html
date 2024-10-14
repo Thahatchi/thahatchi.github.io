@@ -1,170 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Search Application</title>
     <link rel="stylesheet" href="style.css">
-    <title>Book Search | IT 4403 Project</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        /* Additional CSS for pagination */
-        #pagination {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center; /* Center the pagination */
-        }
-
-        #pagination a {
-            margin: 0 5px;
-            padding: 10px 15px;
-            background-color: #007BFF; /* Blue background */
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-            display: inline-block; /* Display as inline-block for padding */
-        }
-
-        #pagination a:hover {
-            background-color: #0056b3; /* Darker blue on hover */
-        }
-
-        #pagination .active {
-            background-color: #0056b3; /* Highlight active page */
-            font-weight: bold;
-        }
-    </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
     <nav class="navbar">
         <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="bookshelf.html">My Bookshelf</a></li>
+            <li><a href="#search-section">Home</a></li>
+            <li><a href="#results-section">Results</a></li>
+            <li><a href="#pagination">Pagination</a></li>
         </ul>
     </nav>
-    
-    <!-- Main Content -->
+
     <main>
-        <h1>Welcome to the Book Search Application</h1>
-        
-        <!-- Book Search Section -->
         <section id="search-section">
-            <input type="text" id="search-input" placeholder="Enter book title or keyword" />
+            <input type="text" id="search-input" placeholder="Search for books...">
             <button id="search-button">Search</button>
         </section>
-        
-        <!-- Results Display Section -->
-        <section id="results-section">
-            <h2>Search Results</h2>
-            <div id="results"></div>
-            <div id="pagination"></div>
-        </section>
 
-        <!-- Book Details Section -->
-        <section id="book-details-section" style="display:none;">
-            <h2>Book Details</h2>
-            <div id="book-details"></div>
-            <button id="save-to-bookshelf" style="display:none;">Save to Bookshelf</button> <!-- Save button -->
+        <section id="results-section">
+            <div id="results"></div>
+            <div id="pagination"></div> <!-- Pagination section -->
         </section>
     </main>
 
-    <!-- Footer -->
     <footer>
-        <p>&copy; 2024 Kevin Co. All Rights Reserved.</p>
+        <p>&copy; 2024 Book Search Application</p>
     </footer>
 
     <script>
         $(document).ready(function() {
-            let currentPage = 1;
-            const resultsPerPage = 10;
-            const apiKey = 'AIzaSyC2lPVELazlhLT8Nr66xG_HLruUBHP-CLo'; // Your API Key
+            const apiKey = 'AiZSyC2lPVELazlhLT8Nr66xG_HLruUBHP-CLo';
+            const booksPerPage = 10; // Number of books per page
 
-            // Function to search for books
-            function searchBooks(query, page = 1) {
-                const startIndex = (page - 1) * resultsPerPage;
-                const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${startIndex}&maxResults=${resultsPerPage}&key=${apiKey}`;
-
-                $.getJSON(url, function(data) {
-                    if (data.items) {
-                        displayBooks(data.items);
-                        setupPagination(data.totalItems, query);
-                    } else {
-                        $('#results').empty().append('<p>No results found.</p>');
-                    }
-                }).fail(function() {
-                    $('#results').empty().append('<p>Error retrieving data. Please try again.</p>');
-                });
-            }
-
-            // Function to display books
-            function displayBooks(books) {
-                $('#results').empty();
-                books.forEach(book => {
-                    const title = book.volumeInfo.title || 'No Title';
-                    const cover = book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : 'images/no-image.jpg';
-                    $('#results').append(`<div class="result-item" data-id="${book.id}" data-title="${title}" data-thumbnail="${cover}">
-                        <h3>${title}</h3>
-                        <img src="${cover}" alt="${title}" />
-                    </div>`);
-                });
-
-                // Add click event to display book details
-                $('.result-item').click(function() {
-                    const bookId = $(this).data('id');
-                    const title = $(this).data('title');
-                    const thumbnail = $(this).data('thumbnail');
-                    displayBookDetails(bookId, title, thumbnail);
-                });
-            }
-
-            // Function to set up pagination
-            function setupPagination(totalItems, query) {
-                const totalPages = Math.ceil(totalItems / resultsPerPage);
-                $('#pagination').empty();
-                
-                for (let i = 1; i <= totalPages; i++) {
-                    $('#pagination').append(`<a href="#" class="page-number ${i === currentPage ? 'active' : ''}">${i}</a>`);
-                }
-
-                // Click event for pagination
-                $('.page-number').click(function(event) {
-                    event.preventDefault(); // Prevent default link behavior
-                    currentPage = parseInt($(this).text(), 10); // Get the page number from the clicked link
-                    searchBooks(query, currentPage); // Perform the search for the selected page
-                });
-            }
-
-            // Display detailed information about the selected book
-            function displayBookDetails(bookId, title, thumbnail) {
-                const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}?key=${apiKey}`;
-                $.getJSON(apiUrl, function(data) {
-                    $('#book-details').empty();
-                    const authors = data.volumeInfo.authors ? data.volumeInfo.authors.join(', ') : 'Unknown Author';
-                    const description = data.volumeInfo.description ? data.volumeInfo.description : 'No description available.';
-                    $('#book-details').append(`
-                        <h3>${title}</h3>
-                        <img src="${thumbnail}" alt="${title}" />
-                        <p><strong>Authors:</strong> ${authors}</p>
-                        <p><strong>Description:</strong> ${description}</p>
-                    `);
-                    $('#book-details-section').show();
-                }).fail(function() {
-                    $('#book-details').empty().append('<p>Error retrieving book details. Please try again.</p>');
-                    $('#book-details-section').show();
-                });
-            }
-
-            // Search button click event
-            $('#search-button').click(function() {
+            $('#search-button').on('click', function() {
                 const query = $('#search-input').val();
-                if (query) {
-                    currentPage = 1; // Reset to first page
-                    searchBooks(query);
-                } else {
-                    $('#results').empty().append('<p>Please enter a search term.</p>');
-                }
+                fetchBooks(query);
             });
-        });
-    </script>
-</body>
-</html>
+
+            function fetchBooks(query, page = 1) {
+                const startIndex = (page - 1) * booksPerPage;
+                $.get(`https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${startIndex}&maxResults=${booksPerPage}&key=${apiKey}`, function(data) {
+                    displayResults(data);
+   
