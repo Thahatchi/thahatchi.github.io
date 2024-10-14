@@ -29,7 +29,9 @@
         <section id="results-section">
             <h2>Search Results</h2>
             <div id="results"></div>
-            <div id="pagination"></div>
+            <div id="pagination">
+                <span id="page-indicator"></span> <!-- Page Indicator -->
+            </div>
         </section>
 
         <!-- Book Details Section -->
@@ -63,10 +65,12 @@
                     } else {
                         $('#results').empty().append('<p>No results found.</p>');
                         $('#pagination').empty(); // Clear pagination if no results
+                        $('#page-indicator').text(''); // Clear page indicator
                     }
                 }).fail(function() {
                     $('#results').empty().append('<p>Error retrieving data. Please try again.</p>');
                     $('#pagination').empty(); // Clear pagination on error
+                    $('#page-indicator').text(''); // Clear page indicator
                 });
             }
 
@@ -96,6 +100,7 @@
                 const totalPages = Math.ceil(totalItems / resultsPerPage);
                 const maxPageButtons = 5; // Maximum number of pagination buttons
                 $('#pagination').empty(); // Clear existing pagination
+                $('#page-indicator').text(`Page ${currentPage} of ${totalPages}`); // Update page indicator
 
                 // Calculate the range of pages to display
                 const startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
@@ -146,6 +151,7 @@
                 } else {
                     $('#results').empty().append('<p>Please enter a search term.</p>');
                     $('#pagination').empty(); // Clear pagination if no search term
+                    $('#page-indicator').text(''); // Clear page indicator
                 }
             });
         });
