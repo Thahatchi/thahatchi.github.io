@@ -1,6 +1,6 @@
 <!-- index.html (Home Page) -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
@@ -32,6 +32,12 @@
             <div id="results"></div> <!-- For displaying search results -->
             <div id="pagination"></div> <!-- For pagination -->
         </section>
+
+        <!-- Book Details Section -->
+        <section id="book-details-section" style="display:none;">
+            <h2>Book Details</h2>
+            <div id="book-details"></div> <!-- For displaying detailed book information -->
+        </section>
     </main>
 
     <!-- Footer -->
@@ -40,31 +46,83 @@
     </footer>
 
     <script>
-        // Add your JavaScript code for handling the API requests and displaying results here
         $(document).ready(function() {
+            let totalItems = 0;
+            const itemsPerPage = 10;
+
+            // Search for books
             $('#search-button').click(function() {
                 const query = $('#search-input').val();
-                // Construct the Google Books API URL
-                const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
+                const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=50`;
                 
                 $.getJSON(apiUrl, function(data) {
                     $('#results').empty(); // Clear previous results
-                    if (data.items) {
-                        data.items.forEach(item => {
-                            const title = item.volumeInfo.title;
-                            const thumbnail = item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'placeholder-image-url'; // Use a placeholder if no image
-                            $('#results').append(`
-                                <div>
-                                    <h3><a href="book-details.html?bookId=${item.id}">${title}</a></h3>
-                                    <img src="${thumbnail}" alt="${title}" />
-                                </div>
-                            `);
-                        });
+                    totalItems = data.items ? data.items.length : 0;
+                    if (totalItems > 0) {
+                        const pages = Math.ceil(totalItems / itemsPerPage);
+                        $('#pagination').empty();
+                        for (let i = 0; i < pages; i++) {
+                            $('#pagination').append(`<button class="page-button" data-page="${i}">${i + 1}</button>`);
+                        }
+                        displayPage(0, data.items);
                     } else {
                         $('#results').append('<p>No results found.</p>');
                     }
                 });
             });
+
+            // Display a specific page of results
+            $(document).on('click', '.page-button', function() {
+                const pageIndex = $(this).data('page');
+                $.getJSON(`https://www.googleapis.com/books/v1/volumes?q=${$('#search-input').val()}&maxResults=50`, function(data) {
+                    displayPage(pageIndex, data.items);
+                });
+            });
+
+            // Function to display the specified page of results
+            function displayPage(pageIndex, items) {
+                $('#results').empty(); // Clear previous results
+                const start = pageIndex * itemsPerPage;
+                const end = start + itemsPerPage;
+                const currentItems = items.slice(start, end);
+                
+                currentItems.forEach(item => {
+                    const title = item.volumeInfo.title;
+                    const thumbnail = item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'placeholder-image-url'; // Use a placeholder if no image
+                    $('#results').append(`
+                        <div class="result-item" data-id="${item.id}">
+                            <h3>${title}</h3>
+                            <img src="${thumbnail}" alt="${title}" />
+                        </div>
+                    `);
+                });
+
+                // Add click event to display book details
+                $('.result-item').click(function() {
+                    const bookId = $(this).data('id');
+                    displayBookDetails(bookId);
+                });
+
+                $('#pagination').show();
+            }
+
+            // Display detailed information about the selected book
+            function displayBookDetails(bookId) {
+                const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}`;
+                $.getJSON(apiUrl, function(data) {
+                    $('#book-details').empty();
+                    const title = data.volumeInfo.title;
+                    const authors = data.volumeInfo.authors ? data.volumeInfo.authors.join(', ') : 'Unknown Author';
+                    const description = data.volumeInfo.description ? data.volumeInfo.description : 'No description available.';
+                    $('#book-details').append(`
+                        <h3>${title}</h3>
+                        <p><strong>Author(s):</strong> ${authors}</p>
+                        <p><strong>Description:</strong> ${description}</p>
+                    `);
+                    $('#book-details-section').show();
+                    $('#results-section').hide();
+                });
+            }
         });
     </script>
 </body>
