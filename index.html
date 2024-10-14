@@ -1,18 +1,17 @@
-<!-- index.html (Home Page) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
-    <title>Book Search | IT 4403 Project</title> <!-- Updated title -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
+    <title>Book Search | IT 4403 Project</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar">
         <ul>
             <li><a href="index.html">Home</a></li>
-            <li><a href="bookshelf.html">My Bookshelf</a></li> <!-- Link to My Bookshelf -->
+            <li><a href="bookshelf.html">My Bookshelf</a></li>
         </ul>
     </nav>
     
@@ -29,14 +28,14 @@
         <!-- Results Display Section -->
         <section id="results-section">
             <h2>Search Results</h2>
-            <div id="results"></div> <!-- For displaying search results -->
-            <div id="pagination"></div> <!-- For pagination -->
+            <div id="results"></div>
+            <div id="pagination"></div>
         </section>
 
         <!-- Book Details Section -->
         <section id="book-details-section" style="display:none;">
             <h2>Book Details</h2>
-            <div id="book-details"></div> <!-- For displaying detailed book information -->
+            <div id="book-details"></div>
         </section>
     </main>
 
@@ -122,8 +121,4 @@
                     $('#book-details-section').show();
                     $('#results-section').hide();
                 });
-            }
-        });
-    </script>
-</body>
-</html>
+   
