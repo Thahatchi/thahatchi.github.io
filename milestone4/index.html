@@ -66,12 +66,11 @@
         $(document).ready(function() {
             let currentPage = 1;
             const resultsPerPage = 10;
-            const apiKey = 'AIzaSyC2lPVELazlhLT8Nr66xG_HLruUBHP-CLo'; // Your API Key
 
             // Function to search for books
             function searchBooks(query, page = 1) {
                 const startIndex = (page - 1) * resultsPerPage;
-                const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${startIndex}&maxResults=${resultsPerPage}&key=${apiKey}`;
+                const url = `/search?q=${query}&startIndex=${startIndex}`; // Updated URL to your backend API
 
                 $.getJSON(url, function(data) {
                     if (data.items) {
@@ -118,7 +117,7 @@
                 $('#page-indicator').text(`Page ${currentPage} of ${totalPages}`); // Update page indicator
 
                 // Calculate the range of pages to display
-                const startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
+                let startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
                 const endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
 
                 // Adjust start page if endPage is less than maxPageButtons
@@ -140,7 +139,7 @@
 
             // Display detailed information about the selected book
             function displayBookDetails(bookId, title, thumbnail) {
-                const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}?key=${apiKey}`;
+                const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}`; // Directly using Google API for details
                 $.getJSON(apiUrl, function(data) {
                     $('#book-details').empty();
                     const authors = data.volumeInfo.authors ? data.volumeInfo.authors.join(', ') : 'Unknown Author';
@@ -174,4 +173,3 @@
     </script>
 </body>
 </html>
-
