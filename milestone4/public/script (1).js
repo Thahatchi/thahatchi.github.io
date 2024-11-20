@@ -10,8 +10,6 @@ $(document).ready(function() {
         $.getJSON(url, function(data) {
             displayBooks(data.items);
             setupPagination(data.totalItems, query);
-        }).fail(function() {
-            alert("Error fetching book data.");
         });
     }
 
@@ -58,7 +56,7 @@ $(document).ready(function() {
 
     // Display detailed information about the selected book
     function displayBookDetails(bookId, title, thumbnail) {
-        const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}`;
+        const apiUrl = `/search/details/${bookId}`;
         $.getJSON(apiUrl, function(data) {
             $('#book-details').empty();
             const authors = data.volumeInfo.authors ? data.volumeInfo.authors.join(', ') : 'Unknown Author';
