@@ -1,16 +1,17 @@
 $(document).ready(function() {
     let currentPage = 1;
     const resultsPerPage = 10;
-    const apiKey = 'AIzaSyC2lPVELazlhLT8Nr66xG_HLruUBHP-CLo'; // Your API Key
 
     // Function to search for books
     function searchBooks(query, page = 1) {
         const startIndex = (page - 1) * resultsPerPage;
-        const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&startIndex=${startIndex}&maxResults=${resultsPerPage}&key=${apiKey}`;
+        const url = `/search?q=${query}&startIndex=${startIndex}&maxResults=${resultsPerPage}`;
 
         $.getJSON(url, function(data) {
             displayBooks(data.items);
             setupPagination(data.totalItems, query);
+        }).fail(function() {
+            alert("Error fetching book data.");
         });
     }
 
@@ -57,7 +58,7 @@ $(document).ready(function() {
 
     // Display detailed information about the selected book
     function displayBookDetails(bookId, title, thumbnail) {
-        const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}?key=${apiKey}`;
+        const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}`;
         $.getJSON(apiUrl, function(data) {
             $('#book-details').empty();
             const authors = data.volumeInfo.authors ? data.volumeInfo.authors.join(', ') : 'Unknown Author';
