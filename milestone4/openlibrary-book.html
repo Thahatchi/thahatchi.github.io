@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Library Book</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="google-books-book.html">Google Books Book</a></li>
+            <li><a href="openlibrary-book.html">Open Library Book</a></li>
+            <li><a href="google-books-search.html">Google Books Search</a></li>
+            <li><a href="it-ebooks-search.html">IT E-Books Search</a></li>
+        </ul>
+    </nav>
+    <main>
+        <h1>Open Library Book Details</h1>
+        <div id="openlibrary-book-data"></div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Your Name. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        $(document).ready(function() {
+            $.getJSON('https://raw.githubusercontent.com/Thahatchi/thahatchi.github.io/main/openlibrary-book.json', function(data) {
+                var book = data;
+                var html = '<h2>' + book.title + '</h2>';
+                html += '<p><strong>Author:</strong> ' + (book.authors || []).map(author => author.name || author).join(', ') + '</p>';
+                html += '<p><strong>Publisher:</strong> ' + (book.publishers || []).map(publisher => publisher.name || publisher).join(', ') + '</p>';
+                html += '<p><strong>Published Date:</strong> ' + book.publish_date + '</p>';
+                html += '<p><strong>Description:</strong> ' + (book.description || 'No description available') + '</p>';
+                html += '<img src="' + (book.cover ? book.cover.medium : 'default-cover.jpg') + '" alt="Book Cover">';
+                $('#openlibrary-book-data').html(html);
+            }).fail(function() {
+                $('#openlibrary-book-data').html('<p>Failed to load data. Please try again later.</p>');
+            });
+        });
+    </script>
+</body>
+</html>
