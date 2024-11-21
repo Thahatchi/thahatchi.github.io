@@ -69,6 +69,14 @@
         <p><strong>Description:</strong> {{description}}</p>
     </script>
 
+    <!-- Bookshelf Item Template for Moustache.js -->
+    <script id="bookshelf-item-template" type="x-tmpl-mustache">
+        <div class="bookshelf-item" data-id="{{id}}" data-title="{{title}}">
+            <h4>{{title}}</h4>
+            <button class="view-shelf-button" data-shelf-id="{{id}}">View Shelf</button>
+        </div>
+    </script>
+
     <!-- Link to external JavaScript -->
     <script src="script.js"></script>
 </body>
