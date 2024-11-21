@@ -85,10 +85,32 @@ main {
 }
 
 #results img {
-    width: 100px; /* Adjust width of the book covers */
+    width: 50px; /* Adjust the width of the book covers to make them smaller */
     height: auto; /* Maintain aspect ratio */
     border-radius: 5px;
     margin-bottom: 10px; /* Space between image and text */
+}
+
+/* Grid/List View Buttons */
+#view-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#view-buttons button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    background-color: #007BFF; /* Blue background */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#view-buttons button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
 }
 
 /* Pagination */
@@ -135,7 +157,7 @@ footer {
 
 /* Book Details Section Image */
 #book-details img {
-    width: 150px; /* Adjust width for the book details page */
+    width: 100px; /* Adjust width for the book details page */
     height: auto; /* Maintain aspect ratio */
     margin-bottom: 10px; /* Space between image and text */
 }
