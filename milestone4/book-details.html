@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="style.css">
     <title>Book Details | IT 4403 Project</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/4.2.0/mustache.min.js"></script> <!-- Mustache.js script -->
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -28,48 +29,53 @@
         <p>&copy; 2024 Kevin Co. All Rights Reserved.</p>
     </footer>
 
+    <!-- Mustache Template for Book Details -->
+    <script id="book-detail-template" type="x-tmpl-mustache">
+        <h2>{{title}}</h2>
+        <h3>Authors: {{authors}}</h3>
+        <h4>Publisher: {{publisher}}</h4>
+        <img src="{{thumbnail}}" alt="{{title}}" />
+        <p>{{description}}</p>
+    </script>
+
     <script>
         $(document).ready(function() {
             const urlParams = new URLSearchParams(window.location.search);
-            const bookId = urlParams.get('bookId'); // Get the bookId from URL
+            const bookId = urlParams.get('id'); // Get the bookId from URL
             
+            if (!bookId) {
+                alert('Book ID is missing in the URL!');
+                return;
+            }
+
             // Fetch book details from the Google Books API
             const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}?key=AIzaSyC2lPVELazlhLT8Nr66xG_HLruUBHP-CLo`;
 
             $.getJSON(apiUrl, function(data) {
+                if (!data || !data.volumeInfo) {
+                    alert('No details available for this book.');
+                    return;
+                }
+
                 const title = data.volumeInfo.title;
                 const authors = data.volumeInfo.authors ? data.volumeInfo.authors.join(', ') : 'Unknown';
                 const publisher = data.volumeInfo.publisher || 'Unknown';
                 const description = data.volumeInfo.description || 'No description available.';
                 const thumbnail = data.volumeInfo.imageLinks ? data.volumeInfo.imageLinks.thumbnail : 'placeholder-image-url';
 
-                // Hardcode book details for specific books
-                if (bookId === '5wBQEp6ruIAC') {
-                    // Details for "The Pragmatic Programmer"
-                    const description = "A guide to software craftsmanship and practical programming techniques.";
-                } else if (bookId === 'Wfan6L9RGgYC') {
-                    // Details for "The Modern Web"
-                    const title = "The Modern Web";
-                    const authors = "Mike West, et al.";
-                    const publisher = "O'Reilly Media";
-                    const description = "An introduction to web development and modern web technologies.";
-                    const thumbnail = "https://books.google.com/books/content?id=Wfan6L9RGgYC&printsec=frontcover&img=1&zoom=1&source=gbs_api";
-                } else if (bookId === 'YJKbVzeabJYC') {
-                    // Details for the second book
-                    const title = "Another Book Title";
-                    const authors = "Author Name";
-                    const publisher = "Publisher Name";
-                    const description = "Description of the second book.";
-                    const thumbnail = "https://books.google.com/books/content?id=YJKbVzeabJYC&printsec=frontcover&img=1&zoom=1&source=gbs_api";
-                }
+                // Render data using Mustache.js
+                const template = $('#book-detail-template').html();
+                const rendered = Mustache.render(template, {
+                    title: title,
+                    authors: authors,
+                    publisher: publisher,
+                    description: description,
+                    thumbnail: thumbnail
+                });
 
-                $('#book-details').append(`
-                    <h2>${title}</h2>
-                    <h3>Authors: ${authors}</h3>
-                    <h4>Publisher: ${publisher}</h4>
-                    <img src="${thumbnail}" alt="${title}" />
-                    <p>${description}</p>
-                `);
+                $('#book-details').html(rendered);
+            }).fail(function() {
+                alert('Failed to fetch book details.');
             });
         });
     </script>
