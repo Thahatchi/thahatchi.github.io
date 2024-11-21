@@ -85,7 +85,7 @@ main {
 }
 
 #results img {
-    width: 50px; /* Adjust the width of the book covers to make them smaller */
+    width: 30px; /* Much smaller book covers */
     height: auto; /* Maintain aspect ratio */
     border-radius: 5px;
     margin-bottom: 10px; /* Space between image and text */
@@ -157,7 +157,7 @@ footer {
 
 /* Book Details Section Image */
 #book-details img {
-    width: 100px; /* Adjust width for the book details page */
+    width: 50px; /* Even smaller book cover on details page */
     height: auto; /* Maintain aspect ratio */
     margin-bottom: 10px; /* Space between image and text */
 }
