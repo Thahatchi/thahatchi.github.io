@@ -1,1 +1,9 @@
+<script id="search-results-template" type="x-tmpl-mustache">
+  {{#books}}
+    <div class="result-item" data-id="{{id}}" data-title="{{title}}" data-thumbnail="{{thumbnail}}">
+        <h3>{{title}}</h3>
+        <img src="{{thumbnail}}" alt="{{title}}" />
+    </div>
+  {{/books}}
+</script>
 
