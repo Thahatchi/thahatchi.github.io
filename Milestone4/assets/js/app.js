@@ -3,7 +3,7 @@ $(document).ready(function() {
     const resultsPerPage = 10;
     const apiKey = 'AIzaSyC2lPVELazlhLT8Nr66xG_HLruUBHP-CLo'; // Your API Key
 
-    // Display the initial bookshelf data
+    // Display the initial bookshelf data (you need to define 'bookshelf' object somewhere if needed)
     displayBookshelf(bookshelf);
 
     // Function to search for books
@@ -21,7 +21,7 @@ $(document).ready(function() {
     function displayBooks(books) {
         $('#results').empty();
         if (books) {
-            const template = $('#book-template').html(); // Get the Mustache template for books
+            const template = $('#search-results-template').html(); // Get the Mustache template for books
             const bookData = books.map(book => {
                 const title = book.volumeInfo.title || 'No Title';
                 const cover = book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : 'images/no-image.jpg';
@@ -33,7 +33,7 @@ $(document).ready(function() {
             });
 
             // Render books with Mustache
-            $('#results').html(Mustache.render(template, bookData));
+            $('#results').html(Mustache.render(template, { books: bookData }));
 
             // Add click event to display book details
             $('.result-item').click(function() {
@@ -70,19 +70,25 @@ $(document).ready(function() {
         });
     }
 
-    // Display detailed information about the selected book
+    // Display detailed information about the selected book using Mustache
     function displayBookDetails(bookId, title, thumbnail) {
         const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}?key=${apiKey}`;
         $.getJSON(apiUrl, function(data) {
             $('#book-details').empty();
             const authors = data.volumeInfo.authors ? data.volumeInfo.authors.join(', ') : 'Unknown Author';
             const description = data.volumeInfo.description ? data.volumeInfo.description : 'No description available.';
-            $('#book-details').append(`
-                <h3>${title}</h3>
-                <img src="${thumbnail}" alt="${title}" />
-                <p><strong>Authors:</strong> ${authors}</p>
-                <p><strong>Description:</strong> ${description}</p>
-            `);
+            
+            // Create data for Mustache rendering
+            const bookDetailData = {
+                title: title,
+                thumbnail: thumbnail,
+                authors: authors,
+                description: description
+            };
+
+            // Render book details with Mustache
+            const template = $('#book-details-template').html();
+            $('#book-details').html(Mustache.render(template, bookDetailData));
             $('#book-details-section').show();
         });
     }
