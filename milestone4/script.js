@@ -128,4 +128,36 @@ $(document).ready(function() {
 
     // Display detailed information about the selected book
     function displayBookDetails(bookId, title, thumbnail) {
-        const apiUrl = `https://www.googleapis.com/books/v1/
+        const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}?key=${apiKey}`;
+        $.getJSON(apiUrl, function(data) {
+            const book = data.volumeInfo;
+            const template = $('#book-detail-template').html();
+            const rendered = Mustache.render(template, {
+                title: book.title,
+                thumbnail: thumbnail,
+                authors: book.authors ? book.authors.join(', ') : 'N/A',
+                description: book.description || 'No description available.'
+            });
+
+            $('#book-details-section').show().find('#book-details').html(rendered);
+            $('#save-to-bookshelf').show();  // Show the Save button
+        });
+    }
+
+    // Event listeners
+    $('#search-button').click(function() {
+        const query = $('#search-input').val();
+        searchBooks(query);  // Call searchBooks function with the input query
+    });
+
+    $('#grid-view-button').click(function() {
+        $('#results').removeClass('list-view').addClass('grid-view');
+    });
+
+    $('#list-view-button').click(function() {
+        $('#results').removeClass('grid-view').addClass('list-view');
+    });
+
+    // Initialize Google Sign-In
+    initGoogleSignIn();
+});
