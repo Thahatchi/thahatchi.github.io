@@ -130,22 +130,37 @@
             }
 
             // Function to set up pagination
-            function setupPagination(totalItems, query) {
-                const totalPages = Math.ceil(totalItems / resultsPerPage);
-                $('#pagination').empty(); // Clear existing pagination
-                $('#page-indicator').text(`Page ${currentPage} of ${totalPages}`); // Update page indicator
+function setupPagination(totalItems, query) {
+    const totalPages = Math.ceil(totalItems / resultsPerPage);
+    const maxPageButtons = 5; // Maximum number of pagination buttons
+    $('#pagination').empty(); // Clear existing pagination
+    $('#page-indicator').text(`Page ${currentPage} of ${totalPages}`); // Update page indicator
 
-                for (let i = 1; i <= totalPages; i++) {
-                    const isActive = i === currentPage ? 'active' : '';
-                    $('#pagination').append(`<span class="page-number ${isActive}" data-page="${i}">${i}</span>`);
-                }
-                
-                // Add click event to page numbers
-                $('.page-number').off('click').on('click', function() {
-                    currentPage = $(this).data('page'); // Get the page number from the clicked element
-                    searchBooks(query, currentPage); // Search with the new page
-                });
-            }
+    // Calculate the range of pages to display
+    let startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
+    let endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
+
+    // Adjust start page if endPage is less than maxPageButtons
+    if (endPage - startPage < maxPageButtons - 1) {
+        startPage = Math.max(1, endPage - maxPageButtons + 1);
+    }
+
+    // Generate the pagination buttons
+    for (let i = startPage; i <= endPage; i++) {
+        const isActive = i === currentPage ? 'active' : '';
+        $('#pagination').append(`<span class="page-number ${isActive}" data-page="${i}">${i}</span>`);
+    }
+
+    // Add click event to page numbers
+    $('.page-number').off('click').on('click', function () { // Unbind previous events
+        const newPage = $(this).data('page'); // Get the page number from the clicked element
+        if (newPage !== currentPage) { // Avoid reloading the current page
+            currentPage = newPage;
+            searchBooks(query, currentPage); // Search with the new page
+        }
+    });
+}
+
 
             // Display detailed information about the selected book
             function displayBookDetails(bookId, title, thumbnail) {
