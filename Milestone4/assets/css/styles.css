@@ -1,53 +1,80 @@
-/* Basic styles */
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
+    color: #333;
+    line-height: 1.6;
 }
 
-header {
-    background-color: #333;
-    color: white;
-    padding: 10px;
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1, h2 {
+    color: #2c3e50;
     text-align: center;
+    margin-bottom: 20px;
 }
 
-button {
-    margin: 5px;
+/* Search Bar */
+#search-bar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+#search-input {
+    width: 300px;
     padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+#search-button {
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
 }
 
-/* Grid view */
-.grid-item {
-    display: inline-block;
-    width: 30%;
-    padding: 10px;
-    text-align: center;
+#search-button:hover {
+    background-color: #2980b9;
 }
 
-.list-item {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    text-align: left;
+/* Book Results Section */
+#results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    justify-content: center;
 }
 
-.book-item img {
-    width: 100px;
-    height: 150px;
-}
-
-/* Book details */
-#book-details {
-    margin-top: 20px;
-    padding: 20px;
+.result-item {
     background-color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    text-align: center;
+    padding: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Bookshelf */
-#bookshelf {
-    margin-top: 20px;
+.result-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+.result-item img {
+    max-wi
