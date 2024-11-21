@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,32 +25,43 @@
     <!-- Navigation Bar -->
     <nav class="navbar">
         <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="bookshelf.html">My Bookshelf</a></li>
+            <li><a href="#" class="nav-link" data-target="home-section">Home</a></li>
+            <li><a href="#" class="nav-link" data-target="bookshelf-section">My Bookshelf</a></li>
         </ul>
     </nav>
     
     <!-- Main Content -->
-    <main>
-        <h1>Welcome to the Book Search Application</h1>
-        
-        <!-- Book Search Section -->
-        <section id="search-section">
-            <input type="text" id="search-input" placeholder="Enter book title or keyword" />
-            <button id="search-button">Search</button>
+    <main id="main-content">
+        <!-- Home Section -->
+        <section id="home-section">
+            <h1>Welcome to the Book Search Application</h1>
+            
+            <!-- Book Search Section -->
+            <div id="search-section">
+                <input type="text" id="search-input" placeholder="Enter book title or keyword" />
+                <button id="search-button">Search</button>
+            </div>
+            
+            <!-- Results Display Section -->
+            <div id="results-section">
+                <h2>Search Results</h2>
+                <div id="results"></div>
+                <div id="pagination">
+                    <span id="page-indicator"></span> <!-- Page Indicator -->
+                </div>
+            </div>
         </section>
-        
-        <!-- Results Display Section -->
-        <section id="results-section">
-            <h2>Search Results</h2>
-            <div id="results"></div>
-            <div id="pagination">
-                <span id="page-indicator"></span> <!-- Page Indicator -->
+
+        <!-- Bookshelf Section -->
+        <section id="bookshelf-section" style="display: none;">
+            <h1>My Bookshelf</h1>
+            <div id="bookshelf-content">
+                <!-- Bookshelf content will be loaded here -->
             </div>
         </section>
 
         <!-- Book Details Section -->
-        <section id="book-details-section" style="display:none;">
+        <section id="book-details-section" style="display: none;">
             <h2>Book Details</h2>
             <div id="book-details"></div>
             <button id="save-to-bookshelf" style="display:none;">Save to Bookshelf</button> <!-- Save button -->
@@ -68,6 +78,14 @@
             let currentPage = 1;
             const resultsPerPage = 10;
             const apiKey = 'AIzaSyC2lPVELazlhLT8Nr66xG_HLruUBHP-CLo'; // Your API Key
+
+            // Navigation system
+            $('.nav-link').click(function(e) {
+                e.preventDefault();
+                const target = $(this).data('target');
+                $('section').hide();
+                $(`#${target}`).show();
+            });
 
             // Function to search for books
             function searchBooks(query, page = 1) {
@@ -114,26 +132,16 @@
             // Function to set up pagination
             function setupPagination(totalItems, query) {
                 const totalPages = Math.ceil(totalItems / resultsPerPage);
-                const maxPageButtons = 5; // Maximum number of pagination buttons
                 $('#pagination').empty(); // Clear existing pagination
                 $('#page-indicator').text(`Page ${currentPage} of ${totalPages}`); // Update page indicator
 
-                // Calculate the range of pages to display
-                const startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
-                const endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
-
-                // Adjust start page if endPage is less than maxPageButtons
-                if (endPage - startPage < maxPageButtons - 1) {
-                    startPage = Math.max(1, endPage - maxPageButtons + 1);
-                }
-
-                for (let i = startPage; i <= endPage; i++) {
+                for (let i = 1; i <= totalPages; i++) {
                     const isActive = i === currentPage ? 'active' : '';
                     $('#pagination').append(`<span class="page-number ${isActive}" data-page="${i}">${i}</span>`);
                 }
                 
                 // Add click event to page numbers
-                $('.page-number').off('click').on('click', function() { // Unbind previous events
+                $('.page-number').off('click').on('click', function() {
                     currentPage = $(this).data('page'); // Get the page number from the clicked element
                     searchBooks(query, currentPage); // Search with the new page
                 });
@@ -152,10 +160,10 @@
                         <p><strong>Authors:</strong> ${authors}</p>
                         <p><strong>Description:</strong> ${description}</p>
                     `);
+                    $('section').hide();
                     $('#book-details-section').show();
                 }).fail(function() {
                     $('#book-details').empty().append('<p>Error retrieving book details. Please try again.</p>');
-                    $('#book-details-section').show();
                 });
             }
 
@@ -167,12 +175,9 @@
                     searchBooks(query);
                 } else {
                     $('#results').empty().append('<p>Please enter a search term.</p>');
-                    $('#pagination').empty(); // Clear pagination if no search term
-                    $('#page-indicator').text(''); // Clear page indicator
                 }
             });
         });
     </script>
 </body>
 </html>
-
