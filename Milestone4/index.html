@@ -20,20 +20,41 @@
             font-weight: bold;
         }
     </style>
-    <!-- Search Results Template -->
-<div id="search-results-template" style="display: none;">
-  <!-- Template content goes here (copy the content from above) -->
-</div>
 
-<!-- Book Details Template -->
-<div id="book-details-template" style="display: none;">
-  <!-- Template content goes here (copy the content from above) -->
-</div>
+    <!-- Mustache Templates -->
+    <script id="search-results-template" type="x-tmpl-mustache">
+        <div class="search-results">
+            {{#books}}
+                <div class="result-item" data-id="{{id}}" data-title="{{title}}" data-thumbnail="{{thumbnail}}">
+                    <img src="{{thumbnail}}" alt="{{title}}" />
+                    <h4>{{title}}</h4>
+                </div>
+            {{/books}}
+        </div>
+    </script>
 
-<!-- Bookshelf Template -->
-<div id="bookshelf-template" style="display: none;">
-  <!-- Template content goes here (copy the content from above) -->
-</div>
+    <script id="book-details-template" type="x-tmpl-mustache">
+        <div class="book-details">
+            <h3>{{title}}</h3>
+            <img src="{{thumbnail}}" alt="{{title}}" />
+            <p><strong>Authors:</strong> {{authors}}</p>
+            <p><strong>Description:</strong> {{description}}</p>
+        </div>
+    </script>
+
+    <script id="bookshelf-template" type="x-tmpl-mustache">
+        <div class="bookshelf">
+            <h2>Your Bookshelf</h2>
+            <ul>
+                {{#books}}
+                    <li class="book-item">
+                        <img src="{{thumbnail}}" alt="{{title}}" />
+                        <h4>{{title}}</h4>
+                    </li>
+                {{/books}}
+            </ul>
+        </div>
+    </script>
 
 </head>
 <body>
