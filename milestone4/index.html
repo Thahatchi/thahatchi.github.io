@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +5,7 @@
     <link rel="stylesheet" href="style.css">
     <title>Book Search | IT 4403 Project</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moustache.js/4.2.0/moustache.min.js"></script>
     <style>
         .page-number {
             cursor: pointer;
@@ -19,6 +19,29 @@
             background-color: #007bff;
             color: white;
             font-weight: bold;
+        }
+
+        /* Grid and List View Styles */
+        .result-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px;
+        }
+        
+        .result-item img {
+            max-width: 150px;
+            margin-bottom: 10px;
+        }
+
+        .grid-view .result-item {
+            display: inline-block;
+            width: 200px;
+        }
+
+        .list-view .result-item {
+            display: block;
+            width: 100%;
         }
     </style>
 </head>
@@ -40,11 +63,17 @@
             <input type="text" id="search-input" placeholder="Enter book title or keyword" />
             <button id="search-button">Search</button>
         </section>
-        
+
+        <!-- View Toggle -->
+        <section id="view-toggle-section">
+            <button id="grid-view-button">Grid View</button>
+            <button id="list-view-button">List View</button>
+        </section>
+
         <!-- Results Display Section -->
         <section id="results-section">
             <h2>Search Results</h2>
-            <div id="results"></div>
+            <div id="results" class="grid-view"></div> <!-- Default Grid View -->
             <div id="pagination">
                 <span id="page-indicator"></span> <!-- Page Indicator -->
             </div>
@@ -62,6 +91,21 @@
     <footer>
         <p>&copy; 2024 Kevin Co. All Rights Reserved.</p>
     </footer>
+
+    <!-- Templates for Moustache.js -->
+    <script id="search-result-template" type="x-tmpl-mustache">
+        <div class="result-item" data-id="{{id}}" data-title="{{title}}" data-thumbnail="{{thumbnail}}">
+            <h3>{{title}}</h3>
+            <img src="{{thumbnail}}" alt="{{title}}" />
+        </div>
+    </script>
+
+    <script id="book-detail-template" type="x-tmpl-mustache">
+        <h3>{{title}}</h3>
+        <img src="{{thumbnail}}" alt="{{title}}" />
+        <p><strong>Authors:</strong> {{authors}}</p>
+        <p><strong>Description:</strong> {{description}}</p>
+    </script>
 
     <script>
         $(document).ready(function() {
@@ -90,16 +134,19 @@
                 });
             }
 
-            // Function to display books
+            // Function to display books using Moustache.js templates
             function displayBooks(books) {
                 $('#results').empty(); // Clear previous results
+                const template = $('#search-result-template').html(); // Get the Moustache template
                 books.forEach(book => {
                     const title = book.volumeInfo.title || 'No Title';
                     const cover = book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : 'images/no-image.jpg';
-                    $('#results').append(`<div class="result-item" data-id="${book.id}" data-title="${title}" data-thumbnail="${cover}">
-                        <h3>${title}</h3>
-                        <img src="${cover}" alt="${title}" />
-                    </div>`);
+                    const rendered = Mustache.render(template, {
+                        id: book.id,
+                        title: title,
+                        thumbnail: cover
+                    });
+                    $('#results').append(rendered);
                 });
 
                 // Add click event to display book details
@@ -146,12 +193,14 @@
                     $('#book-details').empty();
                     const authors = data.volumeInfo.authors ? data.volumeInfo.authors.join(', ') : 'Unknown Author';
                     const description = data.volumeInfo.description ? data.volumeInfo.description : 'No description available.';
-                    $('#book-details').append(`
-                        <h3>${title}</h3>
-                        <img src="${thumbnail}" alt="${title}" />
-                        <p><strong>Authors:</strong> ${authors}</p>
-                        <p><strong>Description:</strong> ${description}</p>
-                    `);
+                    const template = $('#book-detail-template').html();
+                    const rendered = Mustache.render(template, {
+                        title: title,
+                        authors: authors,
+                        description: description,
+                        thumbnail: thumbnail
+                    });
+                    $('#book-details').append(rendered);
                     $('#book-details-section').show();
                 }).fail(function() {
                     $('#book-details').empty().append('<p>Error retrieving book details. Please try again.</p>');
@@ -171,8 +220,16 @@
                     $('#page-indicator').text(''); // Clear page indicator
                 }
             });
+
+            // Grid/List View Toggle
+            $('#grid-view-button').click(function() {
+                $('#results').removeClass('list-view').addClass('grid-view');
+            });
+
+            $('#list-view-button').click(function() {
+                $('#results').removeClass('grid-view').addClass('list-view');
+            });
         });
     </script>
 </body>
-</html>
-
+</
