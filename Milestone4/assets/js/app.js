@@ -3,6 +3,9 @@ $(document).ready(function() {
     const resultsPerPage = 10;
     const apiKey = 'AIzaSyC2lPVELazlhLT8Nr66xG_HLruUBHP-CLo'; // Your API Key
 
+    // Display the initial bookshelf data
+    displayBookshelf(bookshelf);
+
     // Function to search for books
     function searchBooks(query, page = 1) {
         const startIndex = (page - 1) * resultsPerPage;
