@@ -2,6 +2,72 @@ $(document).ready(function() {
     let currentPage = 1;
     const resultsPerPage = 10;
     const apiKey = 'AIzaSyC2lPVELazlhLT8Nr66xG_HLruUBHP-CLo'; // Your API Key
+    let userId = '';  // Variable to store user ID after login
+
+    // Initialize Google API client for sign-in
+    function initGoogleSignIn() {
+        gapi.load('auth2', function() {
+            gapi.auth2.init({
+                client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com'  // Replace with your client ID
+            }).then(function(auth2) {
+                // Attach sign-in button
+                auth2.attachClickHandler('google-signin-button', {}, function(googleUser) {
+                    const profile = googleUser.getBasicProfile();
+                    userId = profile.getId();  // Get user ID
+                    const userName = profile.getName();
+                    $('#google-signin-button').hide();
+                    $('#user-name').text('Welcome, ' + userName);
+                    displayBookshelf(userId);  // Display the user's bookshelf once signed in
+                }, function(error) {
+                    console.log('Sign-in error: ', error);
+                });
+            });
+        });
+    }
+
+    // Function to display the user's bookshelf
+    function displayBookshelf(userId) {
+        const url = `https://www.googleapis.com/books/v1/mylibrary/bookshelves?key=${apiKey}`;
+        $.getJSON(url, function(data) {
+            if (data.items) {
+                $('#bookshelf').empty();  // Clear previous bookshelf items
+                data.items.forEach(function(shelf) {
+                    $('#bookshelf').append(`<div class="bookshelf-item">
+                        <h4>${shelf.title}</h4>
+                        <button class="view-shelf-button" data-shelf-id="${shelf.id}">View Shelf</button>
+                    </div>`);
+                });
+
+                // View shelf button click event
+                $('.view-shelf-button').click(function() {
+                    const shelfId = $(this).data('shelf-id');
+                    displayShelfBooks(shelfId);
+                });
+            } else {
+                $('#bookshelf').append('<p>No bookshelves found.</p>');
+            }
+        });
+    }
+
+    // Function to display books in a specific bookshelf
+    function displayShelfBooks(shelfId) {
+        const url = `https://www.googleapis.com/books/v1/mylibrary/bookshelves/${shelfId}/volumes?key=${apiKey}`;
+        $.getJSON(url, function(data) {
+            $('#bookshelf-details').empty();  // Clear previous bookshelf details
+            if (data.items) {
+                data.items.forEach(function(book) {
+                    const title = book.volumeInfo.title || 'No Title';
+                    const cover = book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : 'images/no-image.jpg';
+                    $('#bookshelf-details').append(`<div class="book-item">
+                        <h4>${title}</h4>
+                        <img src="${cover}" alt="${title}" />
+                    </div>`);
+                });
+            } else {
+                $('#bookshelf-details').append('<p>No books found in this shelf.</p>');
+            }
+        });
+    }
 
     // Function to search for books
     function searchBooks(query, page = 1) {
@@ -80,4 +146,7 @@ $(document).ready(function() {
             searchBooks(query);
         }
     });
+
+    // Initialize Google Sign-In
+    initGoogleSignIn();
 });
