@@ -14,18 +14,23 @@ $(document).ready(function() {
         });
     }
 
-    // Function to display books
+    // Function to display books using Mustache.js templates
     function displayBooks(books) {
         $('#results').empty();
         if (books) {
-            books.forEach(book => {
+            const template = $('#book-template').html(); // Get the Mustache template for books
+            const bookData = books.map(book => {
                 const title = book.volumeInfo.title || 'No Title';
                 const cover = book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : 'images/no-image.jpg';
-                $('#results').append(`<div class="result-item" data-id="${book.id}" data-title="${title}" data-thumbnail="${cover}">
-                    <h3>${title}</h3>
-                    <img src="${cover}" alt="${title}" />
-                </div>`);
+                return {
+                    id: book.id,
+                    title: title,
+                    thumbnail: cover
+                };
             });
+
+            // Render books with Mustache
+            $('#results').html(Mustache.render(template, bookData));
 
             // Add click event to display book details
             $('.result-item').click(function() {
@@ -39,18 +44,25 @@ $(document).ready(function() {
         }
     }
 
-    // Function to set up pagination
+    // Function to set up pagination using Mustache.js templates
     function setupPagination(totalItems, query) {
         const totalPages = Math.ceil(totalItems / resultsPerPage);
-        $('#pagination').empty();
-        
+        const maxPageButtons = 5; // Maximum number of pagination buttons
+        const pages = [];
+
         for (let i = 1; i <= totalPages; i++) {
-            $('#pagination').append(`<span class="page-number ${i === currentPage ? 'active' : ''}">${i}</span>`);
+            pages.push({
+                page: i,
+                active: i === currentPage // Mark current page as active
+            });
         }
+
+        const template = $('#pagination-template').html(); // Get the Mustache template for pagination
+        $('#pagination').html(Mustache.render(template, { pages: pages }));
 
         // Click event for pagination
         $('.page-number').click(function() {
-            currentPage = parseInt($(this).text(), 10); // Get the page number from the clicked link
+            currentPage = parseInt($(this).data('page'), 10); // Get the page number from the clicked link
             searchBooks(query, currentPage); // Perform the search for the selected page
         });
     }
