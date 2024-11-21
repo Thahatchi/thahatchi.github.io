@@ -85,9 +85,10 @@ main {
 }
 
 #results img {
-    max-width: 100%;
-    height: auto;
+    width: 100px; /* Adjust width of the book covers */
+    height: auto; /* Maintain aspect ratio */
     border-radius: 5px;
+    margin-bottom: 10px; /* Space between image and text */
 }
 
 /* Pagination */
@@ -130,4 +131,11 @@ footer {
     position: relative;
     bottom: 0;
     width: 100%;
+}
+
+/* Book Details Section Image */
+#book-details img {
+    width: 150px; /* Adjust width for the book details page */
+    height: auto; /* Maintain aspect ratio */
+    margin-bottom: 10px; /* Space between image and text */
 }
