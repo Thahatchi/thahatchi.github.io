@@ -32,10 +32,12 @@ $(document).ready(function() {
             if (data.items) {
                 $('#bookshelf').empty();  // Clear previous bookshelf items
                 data.items.forEach(function(shelf) {
-                    $('#bookshelf').append(`<div class="bookshelf-item">
-                        <h4>${shelf.title}</h4>
-                        <button class="view-shelf-button" data-shelf-id="${shelf.id}">View Shelf</button>
-                    </div>`);
+                    const template = $('#bookshelf-item-template').html();
+                    const rendered = Mustache.render(template, {
+                        id: shelf.id,
+                        title: shelf.title
+                    });
+                    $('#bookshelf').append(rendered); // Add rendered bookshelf item
                 });
 
                 // View shelf button click event
@@ -87,10 +89,13 @@ $(document).ready(function() {
             books.forEach(book => {
                 const title = book.volumeInfo.title || 'No Title';
                 const cover = book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : 'images/no-image.jpg';
-                $('#results').append(`<div class="result-item" data-id="${book.id}" data-title="${title}" data-thumbnail="${cover}">
-                    <h3>${title}</h3>
-                    <img src="${cover}" alt="${title}" />
-                </div>`);
+                const template = $('#search-result-template').html();
+                const rendered = Mustache.render(template, {
+                    id: book.id,
+                    title: title,
+                    thumbnail: cover
+                });
+                $('#results').append(rendered); // Add rendered search result item
             });
 
             // Add click event to display book details
@@ -123,30 +128,4 @@ $(document).ready(function() {
 
     // Display detailed information about the selected book
     function displayBookDetails(bookId, title, thumbnail) {
-        const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}?key=${apiKey}`;
-        $.getJSON(apiUrl, function(data) {
-            $('#book-details').empty();
-            const authors = data.volumeInfo.authors ? data.volumeInfo.authors.join(', ') : 'Unknown Author';
-            const description = data.volumeInfo.description ? data.volumeInfo.description : 'No description available.';
-            $('#book-details').append(`
-                <h3>${title}</h3>
-                <img src="${thumbnail}" alt="${title}" />
-                <p><strong>Authors:</strong> ${authors}</p>
-                <p><strong>Description:</strong> ${description}</p>
-            `);
-            $('#book-details-section').show();
-        });
-    }
-
-    // Search button click event
-    $('#search-button').click(function() {
-        const query = $('#search-input').val();
-        if (query) {
-            currentPage = 1; // Reset to first page
-            searchBooks(query);
-        }
-    });
-
-    // Initialize Google Sign-In
-    initGoogleSignIn();
-});
+        const apiUrl = `https://www.googleapis.com/books/v1/
