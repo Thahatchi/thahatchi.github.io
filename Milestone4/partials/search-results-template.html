@@ -1,9 +1,10 @@
 <script id="search-results-template" type="x-tmpl-mustache">
-  {{#books}}
-    <div class="result-item" data-id="{{id}}" data-title="{{title}}" data-thumbnail="{{thumbnail}}">
-        <h3>{{title}}</h3>
+  <div class="search-results">
+    {{#books}}
+      <div class="result-item" data-id="{{id}}" data-title="{{title}}" data-thumbnail="{{thumbnail}}">
         <img src="{{thumbnail}}" alt="{{title}}" />
-    </div>
-  {{/books}}
+        <h4>{{title}}</h4>
+      </div>
+    {{/books}}
+  </div>
 </script>
-
