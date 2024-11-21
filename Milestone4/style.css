@@ -41,12 +41,7 @@ main {
 
 /* Search Section */
 #search-section {
-    display: flex;
-    justify-content: center; /* Center the search bar */
-    align-items: center;
     margin-bottom: 20px;
-    gap: 10px; /* Add spacing between the input and button */
-    flex-wrap: wrap; /* Ensure responsiveness */
 }
 
 #search-input {
@@ -77,8 +72,6 @@ main {
 #results {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-evenly; /* Distribute items evenly */
-    gap: 15px; /* Add spacing between items */
 }
 
 #results div {
@@ -89,46 +82,12 @@ main {
     background-color: white;
     width: calc(30% - 20px); /* Adjust width for three columns */
     text-align: center;
-    transition: transform 0.3s, box-shadow 0.3s; /* Add hover effects */
-}
-
-#results div:hover {
-    transform: scale(1.05); /* Slight zoom effect */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
 }
 
 #results img {
     max-width: 100%;
     height: auto;
     border-radius: 5px;
-}
-
-/* Book Details Section */
-#book-details {
-    margin-top: 20px;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-#book-details img {
-    max-width: 200px;
-    display: block;
-    margin: 0 auto 20px;
-    border-radius: 5px;
-}
-
-#book-details h2 {
-    margin-bottom: 15px;
-    text-align: center;
-    color: #007BFF;
-}
-
-#book-details p {
-    line-height: 1.6;
-    text-align: justify;
 }
 
 /* Pagination */
@@ -171,21 +130,4 @@ footer {
     position: relative;
     bottom: 0;
     width: 100%;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    #search-input {
-        width: 100%; /* Full-width input for smaller screens */
-    }
-
-    #results div {
-        width: calc(45% - 20px); /* Two columns on smaller screens */
-    }
-}
-
-@media (max-width: 480px) {
-    #results div {
-        width: 100%; /* Full-width items for very small screens */
-    }
 }
