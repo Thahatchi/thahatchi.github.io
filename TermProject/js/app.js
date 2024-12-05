@@ -18,8 +18,7 @@ $(document).ready(function () {
       success: function (data) {
         if (data.Response === 'True') {
           moviesData = data.Search;
-          console.log(moviesData); // Log the fetched data for debugging
-          displayResults(moviesData);
+          displayResults(moviesData); // Show the results when first fetched
         } else {
           $('#results').html('<p>No results found.</p>');
         }
@@ -43,63 +42,51 @@ $(document).ready(function () {
     $('#results').html(resultsHtml);
   }
 
-  // Function to filter movies by genre
+  // Function to filter movies by genre dynamically
   function filterByGenre(genre) {
-    console.log('Filtering by genre:', genre); // Log the selected genre for debugging
     if (genre === 'All') {
-      return moviesData; // Return all movies if "All" genre is selected
+      displayResults(moviesData); // Show all movies if 'All' is selected
+    } else {
+      const filteredMovies = moviesData.filter(movie => {
+        return movie.Genre && movie.Genre.split(', ').includes(genre); // Check if genre matches
+      });
+      displayResults(filteredMovies); // Update the displayed list with filtered results
     }
+  }
 
-    // Filter movies based on genre
-    const filteredMovies = moviesData.filter(movie => {
-      if (movie.Genre) {
-        // Split the genre string into an array of genres
-        const genres = movie.Genre.split(',').map(g => g.trim().toLowerCase());
-        console.log('Available genres for movie:', genres); // Log the genres for debugging
-        // Check if the selected genre is included in the genres array
-        return genres.includes(genre.toLowerCase());
-      }
-      return false; // If no genre is available, exclude the movie
+  // Function to sort movies by IMDb rating
+  function sortByRating(order) {
+    const sortedMovies = moviesData.sort((a, b) => {
+      const ratingA = parseFloat(a.imdbRating) || 0;
+      const ratingB = parseFloat(b.imdbRating) || 0;
+      return order === 'desc' ? ratingB - ratingA : ratingA - ratingB;
     });
+    displayResults(sortedMovies); // Update displayed list with sorted results
+  }
 
-    console.log('Filtered Movies:', filteredMovies); // Log filtered results
-    return filteredMovies;
+  // Function to sort movies by year
+  function sortByYear(order) {
+    const sortedMovies = moviesData.sort((a, b) => {
+      const yearA = parseInt(a.Year);
+      const yearB = parseInt(b.Year);
+      return order === 'desc' ? yearB - yearA : yearA - yearB;
+    });
+    displayResults(sortedMovies); // Update displayed list with sorted results
   }
 
   // Event listener for genre filter change
   $('#genre-filter').on('change', function () {
     const selectedGenre = $(this).val();
-    const filteredMovies = filterByGenre(selectedGenre);
-    displayResults(filteredMovies);
+    filterByGenre(selectedGenre); // Apply genre filter dynamically
   });
 
   // Event listener for sort options change
   $('#sort-options').on('change', function () {
     const sortOrder = $(this).val();
-    let sortedMovies = [];
     if (sortOrder.includes('rating')) {
-      sortedMovies = sortByRating(sortOrder.includes('desc') ? 'desc' : 'asc');
+      sortByRating(sortOrder.includes('desc') ? 'desc' : 'asc');
     } else if (sortOrder.includes('year')) {
-      sortedMovies = sortByYear(sortOrder.includes('desc') ? 'desc' : 'asc');
+      sortByYear(sortOrder.includes('desc') ? 'desc' : 'asc');
     }
-    displayResults(sortedMovies);
   });
-
-  // Function to sort movies by rating
-  function sortByRating(order) {
-    return moviesData.sort((a, b) => {
-      const ratingA = parseFloat(a.imdbRating) || 0;
-      const ratingB = parseFloat(b.imdbRating) || 0;
-      return order === 'desc' ? ratingB - ratingA : ratingA - ratingB;
-    });
-  }
-
-  // Function to sort movies by year
-  function sortByYear(order) {
-    return moviesData.sort((a, b) => {
-      const yearA = parseInt(a.Year);
-      const yearB = parseInt(b.Year);
-      return order === 'desc' ? yearB - yearA : yearA - yearB;
-    });
-  }
 });
