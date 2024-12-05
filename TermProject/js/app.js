@@ -38,6 +38,7 @@ $(document).ready(function () {
           <h3>${movie.title} (${movie.release_date.substring(0, 4)})</h3>
           <img src="https://image.tmdb.org/t/p/w500/${movie.poster_path}" alt="${movie.title}">
           <button class="add-to-watchlist" data-id="${movie.id}">Add to Watchlist</button>
+          <button class="view-details" data-id="${movie.id}">View Details</button>
         </div>
       `)
       .join('');
@@ -56,6 +57,40 @@ $(document).ready(function () {
       alert('This movie is already in your watchlist.');
     }
   });
+
+  // Event listener for viewing movie details
+  $('#results').on('click', '.view-details', function () {
+    const movieId = $(this).data('id');
+    const movie = moviesData.find(m => m.id === movieId);
+    
+    // Fetch detailed movie information
+    $.ajax({
+      url: `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`,
+      method: 'GET',
+      success: function (movieDetails) {
+        displayMovieDetails(movieDetails);
+      },
+      error: function (err) {
+        console.error('Error fetching movie details:', err);
+      }
+    });
+  });
+
+  // Function to display detailed movie information
+  function displayMovieDetails(movie) {
+    const movieHtml = `
+      <h3>${movie.title} (${movie.release_date.substring(0, 4)})</h3>
+      <img src="https://image.tmdb.org/t/p/w500/${movie.poster_path}" alt="${movie.title}">
+      <p><strong>Overview:</strong> ${movie.overview}</p>
+      <p><strong>Release Date:</strong> ${movie.release_date}</p>
+      <p><strong>IMDB Rating:</strong> ${movie.vote_average}</p>
+      <p><strong>Genres:</strong> ${movie.genres.map(genre => genre.name).join(', ')}</p>
+      <p><strong>Language:</strong> ${movie.original_language.toUpperCase()}</p>
+    `;
+    $('#movie-info').html(movieHtml);
+    $('#movie-details').show(); // Show the movie details section
+    $('#results').hide(); // Hide the search results section
+  }
 
   // Function to display watchlist
   function displayWatchlist() {
