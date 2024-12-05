@@ -45,6 +45,68 @@
     <section id="results">
       <!-- This will be populated with search results dynamically -->
     </section>
+
+    <!-- Watchlist Section -->
+    <section id="watchlist-section">
+      <h2>Your Watchlist</h2>
+      <div id="watchlist">
+        <!-- Watchlist movies will be displayed here -->
+      </div>
+    </section>
+
+    <section id="details">
+      <!-- This can be used for additional movie details later if needed -->
+    </section>
+  </main>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movies SPA</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>Movies Search App</h1>
+  </header>
+  <main>
+    <section id="search">
+      <form id="searchForm">
+        <input type="text" id="movieTitle" placeholder="Search for a movie..." required>
+        <button type="submit">Search</button>
+      </form>
+    </section>
+
+    <!-- Filter and Sort Section -->
+    <section id="filters">
+      <label for="genre-filter">Filter by Genre:</label>
+      <select id="genre-filter">
+        <option value="All">All Genres</option>
+        <option value="Action">Action</option>
+        <option value="Comedy">Comedy</option>
+        <option value="Drama">Drama</option>
+        <option value="Romance">Romance</option>
+        <option value="Sci-Fi">Sci-Fi</option>
+        <option value="Thriller">Thriller</option>
+      </select>
+
+      <label for="sort-options">Sort by:</label>
+      <select id="sort-options">
+        <option value="year-asc">Release Year: Ascending</option>
+        <option value="year-desc">Release Year: Descending</option>
+        <option value="rating-desc">IMDB Rating: Highest to Lowest</option>
+        <option value="rating-asc">IMDB Rating: Lowest to Highest</option>
+      </select>
+    </section>
+
+    <section id="results">
+      <!-- This will be populated with search results dynamically -->
+    </section>
     <section id="details">
       <!-- This can be used for additional movie details later if needed -->
     </section>
