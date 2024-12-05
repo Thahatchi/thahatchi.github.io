@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  const apiKey = 'YOUR_API_KEY'; // Replace with your Movies API key
+  const apiKey = '58fac940'; // Your OMDB API key
 
   // Search form submission
   $('#searchForm').on('submit', function (e) {
