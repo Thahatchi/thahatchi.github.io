@@ -44,9 +44,16 @@ $(document).ready(function () {
 
   // Function to filter movies by genre
   function filterByGenre(genre) {
-    return genre === 'All' ? moviesData : moviesData.filter(movie => {
-      // Ensure Genre is a string and matches the selected genre
-      return movie.Genre && movie.Genre.toLowerCase().includes(genre.toLowerCase());
+    if (genre === 'All') {
+      return moviesData;
+    }
+
+    return moviesData.filter(movie => {
+      if (movie.Genre) {
+        const genres = movie.Genre.split(','); // Split the genre string into an array
+        return genres.some(g => g.trim().toLowerCase() === genre.toLowerCase()); // Check if the genre matches any in the array
+      }
+      return false;
     });
   }
 
