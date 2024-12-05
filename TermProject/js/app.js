@@ -18,6 +18,7 @@ $(document).ready(function () {
       success: function (data) {
         if (data.Response === 'True') {
           moviesData = data.Search;
+          console.log(moviesData); // Log the fetched data for debugging
           displayResults(moviesData);
         } else {
           $('#results').html('<p>No results found.</p>');
@@ -44,35 +45,25 @@ $(document).ready(function () {
 
   // Function to filter movies by genre
   function filterByGenre(genre) {
+    console.log('Filtering by genre:', genre); // Log the selected genre for debugging
     if (genre === 'All') {
-      return moviesData;
+      return moviesData; // Return all movies if "All" genre is selected
     }
 
-    return moviesData.filter(movie => {
+    // Filter movies based on genre
+    const filteredMovies = moviesData.filter(movie => {
       if (movie.Genre) {
-        const genres = movie.Genre.split(','); // Split the genre string into an array
-        return genres.some(g => g.trim().toLowerCase() === genre.toLowerCase()); // Check if the genre matches any in the array
+        // Split the genre string into an array of genres
+        const genres = movie.Genre.split(',').map(g => g.trim().toLowerCase());
+        console.log('Available genres for movie:', genres); // Log the genres for debugging
+        // Check if the selected genre is included in the genres array
+        return genres.includes(genre.toLowerCase());
       }
-      return false;
+      return false; // If no genre is available, exclude the movie
     });
-  }
 
-  // Function to sort movies by rating
-  function sortByRating(order) {
-    return moviesData.sort((a, b) => {
-      const ratingA = parseFloat(a.imdbRating) || 0;
-      const ratingB = parseFloat(b.imdbRating) || 0;
-      return order === 'desc' ? ratingB - ratingA : ratingA - ratingB;
-    });
-  }
-
-  // Function to sort movies by year
-  function sortByYear(order) {
-    return moviesData.sort((a, b) => {
-      const yearA = parseInt(a.Year);
-      const yearB = parseInt(b.Year);
-      return order === 'desc' ? yearB - yearA : yearA - yearB;
-    });
+    console.log('Filtered Movies:', filteredMovies); // Log filtered results
+    return filteredMovies;
   }
 
   // Event listener for genre filter change
@@ -93,4 +84,22 @@ $(document).ready(function () {
     }
     displayResults(sortedMovies);
   });
+
+  // Function to sort movies by rating
+  function sortByRating(order) {
+    return moviesData.sort((a, b) => {
+      const ratingA = parseFloat(a.imdbRating) || 0;
+      const ratingB = parseFloat(b.imdbRating) || 0;
+      return order === 'desc' ? ratingB - ratingA : ratingA - ratingB;
+    });
+  }
+
+  // Function to sort movies by year
+  function sortByYear(order) {
+    return moviesData.sort((a, b) => {
+      const yearA = parseInt(a.Year);
+      const yearB = parseInt(b.Year);
+      return order === 'desc' ? yearB - yearA : yearA - yearB;
+    });
+  }
 });
