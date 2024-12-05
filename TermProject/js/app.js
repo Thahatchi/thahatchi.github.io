@@ -1,27 +1,22 @@
 $(document).ready(function () {
   const apiKey = 'ec09c60445eaa509d0fbf586e3218851'; // Your TMDb API Key
   let moviesData = []; // Store fetched movies
-  const genreMap = {
-    28: 'Action',
-    12: 'Adventure',
-    16: 'Animation',
-    35: 'Comedy',
-    80: 'Crime',
-    99: 'Documentary',
-    18: 'Drama',
-    10751: 'Family',
-    14: 'Fantasy',
-    36: 'History',
-    27: 'Horror',
-    10402: 'Music',
-    9648: 'Mystery',
-    10749: 'Romance',
-    878: 'Science Fiction',
-    10770: 'TV Movie',
-    53: 'Thriller',
-    10752: 'War',
-    37: 'Western'
-  };
+  let allGenres = [];  // Store all genre data
+
+  // Fetch genres from TMDb to populate genre filter dropdown
+  $.ajax({
+    url: `https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}`,
+    method: 'GET',
+    success: function (data) {
+      allGenres = data.genres;
+      // Populate genre dropdown
+      const genreOptions = allGenres.map(genre => `<option value="${genre.name}">${genre.name}</option>`).join('');
+      $('#genre-filter').html(`<option value="All">All</option>${genreOptions}`);
+    },
+    error: function (err) {
+      console.error('Error fetching genres:', err);
+    }
+  });
 
   // Handle the form submit to search for movies
   $('#searchForm').on('submit', function (e) {
@@ -55,7 +50,11 @@ $(document).ready(function () {
     const resultsHtml = movies
       .map((movie) => {
         // Map genres using the genreMap and get the vote_average for IMDb-like rating
-        const genres = movie.genre_ids.map(id => genreMap[id] || 'Unknown').join(', ');
+        const genres = movie.genre_ids.map(id => {
+          const genre = allGenres.find(g => g.id === id);
+          return genre ? genre.name : 'Unknown';
+        }).join(', ');
+
         const imdbRating = movie.vote_average || 'Not Available';
 
         return `
@@ -77,7 +76,10 @@ $(document).ready(function () {
       displayResults(moviesData); // Show all movies if 'All' is selected
     } else {
       const filteredMovies = moviesData.filter(movie => {
-        const genres = movie.genre_ids.map(id => genreMap[id] || 'Unknown');
+        const genres = movie.genre_ids.map(id => {
+          const genre = allGenres.find(g => g.id === id);
+          return genre ? genre.name : 'Unknown';
+        });
         return genres.includes(genre); // Check if genre matches
       });
       displayResults(filteredMovies); // Update the displayed list with filtered results
