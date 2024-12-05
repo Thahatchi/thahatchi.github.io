@@ -19,6 +19,29 @@
         <button type="submit">Search</button>
       </form>
     </section>
+
+    <!-- Filter and Sort Section -->
+    <section id="filters">
+      <label for="genre-filter">Filter by Genre:</label>
+      <select id="genre-filter">
+        <option value="All">All Genres</option>
+        <option value="Action">Action</option>
+        <option value="Comedy">Comedy</option>
+        <option value="Drama">Drama</option>
+        <option value="Romance">Romance</option>
+        <option value="Sci-Fi">Sci-Fi</option>
+        <option value="Thriller">Thriller</option>
+      </select>
+
+      <label for="sort-options">Sort by:</label>
+      <select id="sort-options">
+        <option value="year-asc">Release Year: Ascending</option>
+        <option value="year-desc">Release Year: Descending</option>
+        <option value="rating-desc">IMDB Rating: Highest to Lowest</option>
+        <option value="rating-asc">IMDB Rating: Lowest to Highest</option>
+      </select>
+    </section>
+
     <section id="results">
       <!-- This will be populated with search results dynamically -->
     </section>
