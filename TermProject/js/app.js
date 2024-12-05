@@ -44,7 +44,10 @@ $(document).ready(function () {
 
   // Function to filter movies by genre
   function filterByGenre(genre) {
-    return genre === 'All' ? moviesData : moviesData.filter(movie => movie.Genre && movie.Genre.includes(genre));
+    return genre === 'All' ? moviesData : moviesData.filter(movie => {
+      // Ensure Genre is a string and matches the selected genre
+      return movie.Genre && movie.Genre.toLowerCase().includes(genre.toLowerCase());
+    });
   }
 
   // Function to sort movies by rating
