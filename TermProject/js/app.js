@@ -1,22 +1,6 @@
 $(document).ready(function () {
-  const apiKey = 'ec09c60445eaa509d0fbf586e3218851'; // Your TMDb API Key
+  const apiKey = 'ec09c60445eaa509d0fbf586e3218851'; // Your TMDB API key
   let moviesData = []; // Store fetched movies
-  let allGenres = [];  // Store all genre data
-
-  // Fetch genres from TMDb to populate genre filter dropdown
-  $.ajax({
-    url: `https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}`,
-    method: 'GET',
-    success: function (data) {
-      allGenres = data.genres;
-      // Populate genre dropdown
-      const genreOptions = allGenres.map(genre => `<option value="${genre.name}">${genre.name}</option>`).join('');
-      $('#genre-filter').html(`<option value="All">All</option>${genreOptions}`);
-    },
-    error: function (err) {
-      console.error('Error fetching genres:', err);
-    }
-  });
 
   // Handle the form submit to search for movies
   $('#searchForm').on('submit', function (e) {
@@ -48,24 +32,12 @@ $(document).ready(function () {
   // Function to display the results
   function displayResults(movies) {
     const resultsHtml = movies
-      .map((movie) => {
-        // Map genres using the genreMap and get the vote_average for IMDb-like rating
-        const genres = movie.genre_ids.map(id => {
-          const genre = allGenres.find(g => g.id === id);
-          return genre ? genre.name : 'Unknown';
-        }).join(', ');
-
-        const imdbRating = movie.vote_average || 'Not Available';
-
-        return `
-          <div class="movie" data-id="${movie.id}">
-            <h3>${movie.title} (${movie.release_date ? movie.release_date.substring(0, 4) : 'Unknown'})</h3>
-            <p>Genre: ${genres}</p>
-            <p>IMDb Rating: ${imdbRating}</p>
-            <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
-          </div>
-        `;
-      })
+      .map((movie) => `
+        <div class="movie" data-id="${movie.id}">
+          <h3>${movie.title} (${movie.release_date ? movie.release_date.split('-')[0] : 'N/A'})</h3>
+          <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+        </div>
+      `)
       .join('');
     $('#results').html(resultsHtml);
   }
@@ -76,20 +48,22 @@ $(document).ready(function () {
       displayResults(moviesData); // Show all movies if 'All' is selected
     } else {
       const filteredMovies = moviesData.filter(movie => {
-        const genres = movie.genre_ids.map(id => {
-          const genre = allGenres.find(g => g.id === id);
-          return genre ? genre.name : 'Unknown';
-        });
-        return genres.includes(genre); // Check if genre matches
+        return movie.genre_ids && movie.genre_ids.includes(parseInt(genre)); // Check if genre matches
       });
       displayResults(filteredMovies); // Update the displayed list with filtered results
     }
   }
 
+  // Event listener for genre filter change
+  $('#genre-filter').on('change', function () {
+    const selectedGenre = $(this).val();
+    filterByGenre(selectedGenre); // Apply genre filter dynamically
+  });
+
   // Function to sort movies by IMDb rating
   function sortByRating(order) {
     const sortedMovies = moviesData.sort((a, b) => {
-      const ratingA = a.vote_average || 0;
+      const ratingA = a.vote_average || 0; // Vote average is the TMDB rating equivalent
       const ratingB = b.vote_average || 0;
       return order === 'desc' ? ratingB - ratingA : ratingA - ratingB;
     });
@@ -99,18 +73,12 @@ $(document).ready(function () {
   // Function to sort movies by year
   function sortByYear(order) {
     const sortedMovies = moviesData.sort((a, b) => {
-      const yearA = a.release_date ? parseInt(a.release_date.substring(0, 4)) : 0;
-      const yearB = b.release_date ? parseInt(b.release_date.substring(0, 4)) : 0;
+      const yearA = parseInt(a.release_date.split('-')[0]);
+      const yearB = parseInt(b.release_date.split('-')[0]);
       return order === 'desc' ? yearB - yearA : yearA - yearB;
     });
     displayResults(sortedMovies); // Update displayed list with sorted results
   }
-
-  // Event listener for genre filter change
-  $('#genre-filter').on('change', function () {
-    const selectedGenre = $(this).val();
-    filterByGenre(selectedGenre); // Apply genre filter dynamically
-  });
 
   // Event listener for sort options change
   $('#sort-options').on('change', function () {
