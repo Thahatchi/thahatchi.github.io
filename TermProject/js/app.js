@@ -2,6 +2,7 @@ $(document).ready(function () {
   const apiKey = 'ec09c60445eaa509d0fbf586e3218851'; // Your TMDb API Key
   let moviesData = []; // Store fetched movies
   let allGenres = [];  // Store all genre data
+  let watchlist = [];  // Store watchlist movies
 
   // Fetch genres from TMDb to populate genre filter dropdown
   $.ajax({
@@ -9,7 +10,6 @@ $(document).ready(function () {
     method: 'GET',
     success: function (data) {
       allGenres = data.genres;
-      // Populate genre dropdown
       const genreOptions = allGenres.map(genre => `<option value="${genre.name}">${genre.name}</option>`).join('');
       $('#genre-filter').html(`<option value="All">All</option>${genreOptions}`);
     },
@@ -20,21 +20,19 @@ $(document).ready(function () {
 
   // Handle the form submit to search for movies
   $('#searchForm').on('submit', function (e) {
-    e.preventDefault(); // Prevent form submission
-
+    e.preventDefault();
     const query = $('#movieTitle').val().trim();
     if (!query) {
       alert('Please enter a movie title.');
       return;
     }
-
     $.ajax({
       url: `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}`,
       method: 'GET',
       success: function (data) {
         if (data.results && data.results.length > 0) {
           moviesData = data.results;
-          displayResults(moviesData); // Show the results when first fetched
+          displayResults(moviesData);
         } else {
           $('#results').html('<p>No results found.</p>');
         }
@@ -47,42 +45,43 @@ $(document).ready(function () {
 
   // Function to display the results
   function displayResults(movies) {
-    const resultsHtml = movies
-      .map((movie) => {
-        // Map genres using the genreMap and get the vote_average for IMDb-like rating
-        const genres = movie.genre_ids.map(id => {
-          const genre = allGenres.find(g => g.id === id);
-          return genre ? genre.name : 'Unknown';
-        }).join(', ');
+    const resultsHtml = movies.map(movie => {
+      const genres = movie.genre_ids.map(id => {
+        const genre = allGenres.find(g => g.id === id);
+        return genre ? genre.name : 'Unknown';
+      }).join(', ');
 
-        const imdbRating = movie.vote_average || 'Not Available';
+      const imdbRating = movie.vote_average || 'Not Available';
 
-        return `
-          <div class="movie" data-id="${movie.id}">
-            <h3>${movie.title} (${movie.release_date ? movie.release_date.substring(0, 4) : 'Unknown'})</h3>
-            <p>Genre: ${genres}</p>
-            <p>IMDb Rating: ${imdbRating}</p>
-            <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
-          </div>
-        `;
-      })
-      .join('');
+      const isInWatchlist = watchlist.some(w => w.id === movie.id);
+      const watchlistButtonText = isInWatchlist ? 'Remove from Watchlist' : 'Add to Watchlist';
+
+      return `
+        <div class="movie" data-id="${movie.id}">
+          <h3>${movie.title} (${movie.release_date ? movie.release_date.substring(0, 4) : 'Unknown'})</h3>
+          <p>Genre: ${genres}</p>
+          <p>IMDb Rating: ${imdbRating}</p>
+          <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+          <button class="watchlist-btn" data-id="${movie.id}">${watchlistButtonText}</button>
+        </div>
+      `;
+    }).join('');
     $('#results').html(resultsHtml);
   }
 
   // Function to filter movies by genre dynamically
   function filterByGenre(genre) {
     if (genre === 'All') {
-      displayResults(moviesData); // Show all movies if 'All' is selected
+      displayResults(moviesData);
     } else {
       const filteredMovies = moviesData.filter(movie => {
         const genres = movie.genre_ids.map(id => {
           const genre = allGenres.find(g => g.id === id);
           return genre ? genre.name : 'Unknown';
         });
-        return genres.includes(genre); // Check if genre matches
+        return genres.includes(genre);
       });
-      displayResults(filteredMovies); // Update the displayed list with filtered results
+      displayResults(filteredMovies);
     }
   }
 
@@ -93,7 +92,7 @@ $(document).ready(function () {
       const ratingB = b.vote_average || 0;
       return order === 'desc' ? ratingB - ratingA : ratingA - ratingB;
     });
-    displayResults(sortedMovies); // Update displayed list with sorted results
+    displayResults(sortedMovies);
   }
 
   // Function to sort movies by year
@@ -103,13 +102,41 @@ $(document).ready(function () {
       const yearB = b.release_date ? parseInt(b.release_date.substring(0, 4)) : 0;
       return order === 'desc' ? yearB - yearA : yearA - yearB;
     });
-    displayResults(sortedMovies); // Update displayed list with sorted results
+    displayResults(sortedMovies);
+  }
+
+  // Add/Remove movies from watchlist
+  $(document).on('click', '.watchlist-btn', function () {
+    const movieId = $(this).data('id');
+    const movie = moviesData.find(m => m.id === movieId);
+    if (!movie) return;
+
+    const index = watchlist.findIndex(w => w.id === movie.id);
+    if (index > -1) {
+      watchlist.splice(index, 1); // Remove from watchlist
+    } else {
+      watchlist.push(movie); // Add to watchlist
+    }
+    displayResults(moviesData); // Refresh movie list
+    displayWatchlist(); // Refresh watchlist
+  });
+
+  // Display watchlist
+  function displayWatchlist() {
+    const watchlistHtml = watchlist.map(movie => `
+      <div class="movie">
+        <h3>${movie.title} (${movie.release_date ? movie.release_date.substring(0, 4) : 'Unknown'})</h3>
+        <p>IMDb Rating: ${movie.vote_average || 'Not Available'}</p>
+      </div>
+    `).join('');
+    $('#watchlist').html(watchlistHtml);
+    $('#watchlist-section').toggle(watchlist.length > 0);
   }
 
   // Event listener for genre filter change
   $('#genre-filter').on('change', function () {
     const selectedGenre = $(this).val();
-    filterByGenre(selectedGenre); // Apply genre filter dynamically
+    filterByGenre(selectedGenre);
   });
 
   // Event listener for sort options change
