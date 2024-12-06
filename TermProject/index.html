@@ -13,6 +13,9 @@
     <h1>Movies Search App</h1>
   </header>
   <main>
+    <!-- Show Watchlist button moved to the top -->
+    <button id="watchlist-toggle">Show Watchlist</button>
+
     <section id="search">
       <form id="searchForm">
         <input type="text" id="movieTitle" placeholder="Search for a movie..." required>
@@ -41,10 +44,11 @@
 
     <section id="watchlist-section" style="display:none;">
       <h2>Your Watchlist</h2>
-      <div id="watchlist"></div>
+      <div id="watchlist">
+        <!-- If no movies in the watchlist, display a message -->
+        <p id="empty-watchlist-msg">Your watchlist is currently empty. Add movies to your watchlist to see them here!</p>
+      </div>
     </section>
-
-    <button id="watchlist-toggle">Show Watchlist</button>
   </main>
 </body>
 </html>
