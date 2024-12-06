@@ -69,6 +69,60 @@ $(document).ready(function () {
     $('#results').html(resultsHtml);
   }
 
+  // Add/Remove movies from watchlist
+  $(document).on('click', '.watchlist-btn', function () {
+    const movieId = $(this).data('id');
+    const movie = moviesData.find(m => m.id === movieId);
+    if (!movie) return;
+
+    const index = watchlist.findIndex(w => w.id === movie.id);
+    if (index > -1) {
+      watchlist.splice(index, 1); // Remove from watchlist
+    } else {
+      watchlist.push(movie); // Add to watchlist
+    }
+    displayResults(moviesData); // Refresh movie list
+    displayWatchlist(); // Refresh watchlist
+  });
+
+  // Display watchlist
+  function displayWatchlist() {
+    if (watchlist.length === 0) {
+      $('#watchlist').html('<p>Your watchlist is currently empty. Add movies to your watchlist to see them here!</p>');
+    } else {
+      const watchlistHtml = watchlist.map(movie => `
+        <div class="movie">
+          <h3>${movie.title} (${movie.release_date ? movie.release_date.substring(0, 4) : 'Unknown'})</h3>
+          <p>IMDb Rating: ${movie.vote_average || 'Not Available'}</p>
+          <button class="remove-watchlist-btn" data-id="${movie.id}">Remove from Watchlist</button>
+        </div>
+      `).join('');
+      $('#watchlist').html(watchlistHtml);
+    }
+  }
+
+  // Remove movie from watchlist
+  $(document).on('click', '.remove-watchlist-btn', function () {
+    const movieId = $(this).data('id');
+    watchlist = watchlist.filter(movie => movie.id !== movieId);
+    displayWatchlist(); // Refresh the watchlist after removal
+    displayResults(moviesData); // Refresh movie list to update button text
+  });
+
+  // Toggle watchlist visibility
+  $('#watchlist-toggle').on('click', function () {
+    $('#watchlist-section').toggle();
+    if (watchlist.length === 0) {
+      $('#watchlist').html('<p>Your watchlist is currently empty. Add movies to your watchlist to see them here!</p>');
+    }
+  });
+
+  // Event listener for genre filter change
+  $('#genre-filter').on('change', function () {
+    const selectedGenre = $(this).val();
+    filterByGenre(selectedGenre);
+  });
+
   // Function to filter movies by genre dynamically
   function filterByGenre(genre) {
     if (genre === 'All') {
@@ -84,6 +138,16 @@ $(document).ready(function () {
       displayResults(filteredMovies);
     }
   }
+
+  // Event listener for sort options change
+  $('#sort-options').on('change', function () {
+    const sortOrder = $(this).val();
+    if (sortOrder.includes('rating')) {
+      sortByRating(sortOrder.includes('desc') ? 'desc' : 'asc');
+    } else if (sortOrder.includes('year')) {
+      sortByYear(sortOrder.includes('desc') ? 'desc' : 'asc');
+    }
+  });
 
   // Function to sort movies by IMDb rating
   function sortByRating(order) {
@@ -104,48 +168,4 @@ $(document).ready(function () {
     });
     displayResults(sortedMovies);
   }
-
-  // Add/Remove movies from watchlist
-  $(document).on('click', '.watchlist-btn', function () {
-    const movieId = $(this).data('id');
-    const movie = moviesData.find(m => m.id === movieId);
-    if (!movie) return;
-
-    const index = watchlist.findIndex(w => w.id === movie.id);
-    if (index > -1) {
-      watchlist.splice(index, 1); // Remove from watchlist
-    } else {
-      watchlist.push(movie); // Add to watchlist
-    }
-    displayResults(moviesData); // Refresh movie list
-    displayWatchlist(); // Refresh watchlist
-  });
-
-  // Display watchlist
-  function displayWatchlist() {
-    const watchlistHtml = watchlist.map(movie => `
-      <div class="movie">
-        <h3>${movie.title} (${movie.release_date ? movie.release_date.substring(0, 4) : 'Unknown'})</h3>
-        <p>IMDb Rating: ${movie.vote_average || 'Not Available'}</p>
-      </div>
-    `).join('');
-    $('#watchlist').html(watchlistHtml);
-    $('#watchlist-section').toggle(watchlist.length > 0);
-  }
-
-  // Event listener for genre filter change
-  $('#genre-filter').on('change', function () {
-    const selectedGenre = $(this).val();
-    filterByGenre(selectedGenre);
-  });
-
-  // Event listener for sort options change
-  $('#sort-options').on('change', function () {
-    const sortOrder = $(this).val();
-    if (sortOrder.includes('rating')) {
-      sortByRating(sortOrder.includes('desc') ? 'desc' : 'asc');
-    } else if (sortOrder.includes('year')) {
-      sortByYear(sortOrder.includes('desc') ? 'desc' : 'asc');
-    }
-  });
 });
