@@ -21,36 +21,32 @@
     </section>
 
     <!-- Filter and Sort Section -->
-    <section id="filters">
+    <section id="filter-sort">
       <label for="genre-filter">Filter by Genre:</label>
       <select id="genre-filter">
-        <option value="All">All Genres</option>
+        <option value="All">All</option>
       </select>
 
       <label for="sort-options">Sort by:</label>
       <select id="sort-options">
-        <option value="year-asc">Release Year: Ascending</option>
-        <option value="year-desc">Release Year: Descending</option>
-        <option value="rating-desc">IMDb Rating: Descending</option>
-        <option value="rating-asc">IMDb Rating: Ascending</option>
+        <option value="rating-asc">Rating (Low to High)</option>
+        <option value="rating-desc">Rating (High to Low)</option>
+        <option value="year-asc">Year (Old to New)</option>
+        <option value="year-desc">Year (New to Old)</option>
       </select>
     </section>
 
-    <!-- Watchlist Button -->
-    <section id="watchlist-button-section">
-      <button id="watchlist-toggle">Show Watchlist</button>
-    </section>
-
-    <!-- Search Results Section -->
     <section id="results">
-      <!-- Movie results will appear here -->
+      <!-- Movie results will be displayed here -->
     </section>
 
-    <!-- Watchlist Section (Hidden Initially) -->
+    <!-- Watchlist Section -->
     <section id="watchlist-section" style="display:none;">
       <h2>Your Watchlist</h2>
       <div id="watchlist"></div>
     </section>
+
+    <button id="watchlist-toggle">Show Watchlist</button>
   </main>
 </body>
 </html>
