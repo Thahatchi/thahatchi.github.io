@@ -1,76 +1,67 @@
-$(document).ready(function () {
-  const watchlist = [];
+// Variables to manage current state
+let isViewingWatchlist = false;
 
-  // Handle movie search
-  $('#searchForm').on('submit', function (e) {
-    e.preventDefault();
-    const query = $('#movieTitle').val();
-    searchMovies(query);
-  });
+// Function to handle the "View Watchlist" button click
+document.getElementById("viewWatchlist").addEventListener("click", () => {
+  const resultsSection = document.getElementById("results");
+  const watchlistSection = document.getElementById("watchlist");
+  const watchlistButton = document.getElementById("viewWatchlist");
 
-  // Search for movies (dummy example)
-  function searchMovies(query) {
-    // Dummy API response simulation
-    const dummyMovies = [
-      { id: 1, title: "Movie 1", poster: "https://via.placeholder.com/150", year: 2021 },
-      { id: 2, title: "Movie 2", poster: "https://via.placeholder.com/150", year: 2022 },
-    ];
+  if (isViewingWatchlist) {
+    // Switch back to search results view
+    resultsSection.style.display = "flex"; // Show results
+    watchlistSection.style.display = "none"; // Hide watchlist
+    watchlistButton.textContent = "View Watchlist";
+    isViewingWatchlist = false;
+  } else {
+    // Switch to watchlist view
+    resultsSection.style.display = "none"; // Hide results
+    watchlistSection.style.display = "flex"; // Show watchlist
+    watchlistButton.textContent = "Back to Search Results";
+    isViewingWatchlist = true;
 
-    displayMovies(dummyMovies);
-  }
-
-  // Display search results
-  function displayMovies(movies) {
-    const resultsContainer = $('#results');
-    resultsContainer.empty();
-    movies.forEach(movie => {
-      const movieCard = $(`
-        <div class="movie-card">
-          <img src="${movie.poster}" alt="${movie.title}">
-          <h3>${movie.title}</h3>
-          <p>Year: ${movie.year}</p>
-          <button class="add-to-watchlist" data-id="${movie.id}" data-title="${movie.title}" data-poster="${movie.poster}">Add to Watchlist</button>
-        </div>
-      `);
-      resultsContainer.append(movieCard);
-    });
-  }
-
-  // Handle Add to Watchlist
-  $(document).on('click', '.add-to-watchlist', function () {
-    const movieId = $(this).data('id');
-    const movieTitle = $(this).data('title');
-    const moviePoster = $(this).data('poster');
-
-    if (!watchlist.some(movie => movie.id === movieId)) {
-      watchlist.push({ id: movieId, title: movieTitle, poster: moviePoster });
-      updateWatchlist();
-    } else {
-      alert("Movie is already in your watchlist!");
-    }
-  });
-
-  // Update Watchlist
-  function updateWatchlist() {
-    const watchlistContainer = $('#watchlist');
-    watchlistContainer.empty();
+    // Show friendly message if watchlist is empty
     if (watchlist.length === 0) {
-      watchlistContainer.html('<p>Your watchlist is currently empty. Add movies to your watchlist to see them here!</p>');
+      watchlistSection.innerHTML = `<p>Your watchlist is empty. Use the search button to add movies!</p>`;
     } else {
-      watchlist.forEach(movie => {
-        const watchlistItem = $(`
-          <div class="movie-card">
-            <img src="${movie.poster}" alt="${movie.title}">
-            <h3>${movie.title}</h3>
-          </div>
-        `);
-        watchlistContainer.append(watchlistItem);
-      });
+      renderWatchlist(); // Render watchlist if it has movies
     }
   }
-
-  // Toggle Watchlist Visibility
-  $('#view-watchlist').on('click', function () {
-    $('#watchlist-section').toggle();
-  });
 });
+
+// Updated renderWatchlist function to ensure proper styling and functionality
+function renderWatchlist() {
+  const watchlistSection = document.getElementById("watchlist");
+  watchlistSection.innerHTML = ""; // Clear existing content
+
+  if (watchlist.length === 0) {
+    watchlistSection.innerHTML = `<p>Your watchlist is empty. Use the search button to add movies!</p>`;
+    return;
+  }
+
+  const watchlistContainer = document.createElement("div");
+  watchlistContainer.classList.add("movie-grid");
+
+  watchlist.forEach(movie => {
+    const movieCard = document.createElement("div");
+    movieCard.classList.add("movie-card");
+    movieCard.innerHTML = `
+      <img src="${movie.Poster}" alt="${movie.Title}" />
+      <h3>${movie.Title}</h3>
+      <button class="remove-watchlist" data-id="${movie.imdbID}">Remove</button>
+    `;
+    watchlistContainer.appendChild(movieCard);
+  });
+
+  watchlistSection.appendChild(watchlistContainer);
+
+  // Attach remove button event listeners
+  const removeButtons = document.querySelectorAll(".remove-watchlist");
+  removeButtons.forEach(button => {
+    button.addEventListener("click", event => {
+      const movieId = event.target.dataset.id;
+      removeFromWatchlist(movieId);
+      renderWatchlist(); // Re-render watchlist after removal
+    });
+  });
+}
