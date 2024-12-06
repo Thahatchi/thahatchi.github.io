@@ -81,6 +81,24 @@ button.remove-watchlist-btn:hover {
   background-color: #005f73;
 }
 
+#watchlist-button-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+#watchlist-toggle {
+  background-color: #008cba;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#watchlist-toggle:hover {
+  background-color: #005f73;
+}
+
 #watchlist-section {
   margin-top: 20px;
 }
