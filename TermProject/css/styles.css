@@ -11,7 +11,7 @@ body {
 header {
   background-color: #2c3e50;
   color: white;
-  padding: 15px 20px;
+  padding: 20px 20px;
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -37,44 +37,65 @@ main {
   display: flex;
   justify-content: center;
   gap: 15px;
+  align-items: center;
 }
 
 #searchForm input {
   width: 350px;
-  padding: 10px;
+  padding: 12px;
   font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: 2px solid #3498db;
+  border-radius: 30px;
+  outline: none;
   box-sizing: border-box;
   transition: border-color 0.3s ease;
 }
 
 #searchForm input:focus {
-  border-color: #3498db;
-  outline: none;
+  border-color: #2980b9;
 }
 
 #searchForm button {
-  padding: 10px 15px;
+  padding: 12px 20px;
   font-size: 1rem;
   cursor: pointer;
   background-color: #3498db;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 30px;
   transition: background-color 0.3s ease;
+  font-weight: bold;
 }
 
 #searchForm button:hover {
   background-color: #2980b9;
 }
 
-/* Filters */
+/* Filters & Show Watchlist Button */
 #filters {
   margin-bottom: 30px;
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 15px;
+}
+
+#filters select,
+#filters .watchlist-btn {
+  padding: 12px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+}
+
+#filters select:hover,
+#filters .watchlist-btn:hover {
+  background-color: #2980b9;
 }
 
 /* Results Grid */
@@ -114,12 +135,13 @@ button.remove-watchlist-btn,
 #watchlist-toggle {
   background-color: #3498db;
   color: white;
-  padding: 10px 20px;
+  padding: 12px 20px;
   cursor: pointer;
   border: none;
-  border-radius: 5px;
+  border-radius: 30px;
   transition: background-color 0.3s ease;
   font-size: 1rem;
+  font-weight: bold;
 }
 
 button.watchlist-btn:hover,
@@ -164,6 +186,11 @@ button.remove-watchlist-btn:hover,
     width: 150px;
   }
 
+  #filters select,
+  #filters .watchlist-btn {
+    padding: 10px 15px;
+  }
+
   #results {
     grid-template-columns: 1fr 1fr;
   }
@@ -192,5 +219,11 @@ button.remove-watchlist-btn:hover,
 
   #searchForm button {
     width: 120px;
+  }
+
+  #filters select,
+  #filters .watchlist-btn {
+    width: 100%;
+    padding: 10px;
   }
 }
