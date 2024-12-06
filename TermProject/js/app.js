@@ -114,10 +114,18 @@ $(document).ready(function () {
     displayResults(moviesData); // Refresh movie list to update button text
   });
 
-  // Toggle watchlist visibility
+  // Toggle between movie results and watchlist view
   $('#watchlist-toggle').on('click', function () {
-    $('#watchlist-section').toggle();
-    displayWatchlist(); // Refresh the watchlist when toggled
+    const isWatchlistVisible = $('#watchlist-section').is(':visible');
+    if (isWatchlistVisible) {
+      $('#results').show(); // Show search results
+      $('#watchlist-section').hide(); // Hide watchlist
+      $('#watchlist-toggle').text('Show Watchlist');
+    } else {
+      $('#results').hide(); // Hide search results
+      $('#watchlist-section').show(); // Show watchlist
+      $('#watchlist-toggle').text('Back to Search');
+    }
   });
 
   // Event listener for genre filter change
