@@ -34,20 +34,19 @@
         <option value="rating-desc">IMDB Rating: Highest to Lowest</option>
         <option value="rating-asc">IMDB Rating: Lowest to Highest</option>
       </select>
+
+      <!-- Watchlist Button -->
+      <button id="watchlist-toggle">Toggle Watchlist</button>
     </section>
 
-    <section id="results">
-      <!-- This will be populated with search results dynamically -->
-    </section>
+    <!-- Movie Search Results -->
+    <section id="results"></section>
 
     <!-- Watchlist Section -->
-    <section id="watchlist-section">
+    <section id="watchlist-section" style="display:none;">
       <h2>Your Watchlist</h2>
-      <div id="watchlist">
-        <p>Your watchlist is currently empty. Add movies to your watchlist to see them here!</p>
-      </div>
+      <div id="watchlist"></div>
     </section>
-
   </main>
 </body>
 </html>
