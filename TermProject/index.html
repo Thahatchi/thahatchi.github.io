@@ -31,19 +31,19 @@
       <select id="sort-options">
         <option value="year-asc">Release Year: Ascending</option>
         <option value="year-desc">Release Year: Descending</option>
-        <option value="rating-desc">IMDB Rating: Highest to Lowest</option>
-        <option value="rating-asc">IMDB Rating: Lowest to Highest</option>
+        <option value="rating-desc">IMDb Rating: Descending</option>
+        <option value="rating-asc">IMDb Rating: Ascending</option>
       </select>
-
-      <!-- Watchlist Button -->
-      <button id="watchlist-toggle">Watchlist</button>
     </section>
 
-    <!-- Movie Search Results -->
-    <section id="results"></section>
+    <!-- Search Results Section -->
+    <section id="results">
+      <!-- Movie results will appear here -->
+    </section>
 
-    <!-- Watchlist Section -->
+    <!-- Watchlist Section (Hidden Initially) -->
     <section id="watchlist-section" style="display:none;">
+      <button id="watchlist-toggle">Toggle Watchlist</button>
       <h2>Your Watchlist</h2>
       <div id="watchlist"></div>
     </section>
