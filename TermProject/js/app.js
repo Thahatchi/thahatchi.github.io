@@ -1,17 +1,17 @@
 $(document).ready(function () {
-  const apiKey = 'ec09c60445eaa509d0fbf586e3218851'; // Your TMDb API Key
+  const apiKey = 'ec09c60445eaa509d0fbf586e3218851'; // Correct TMDb API Key
   let moviesData = []; // Store fetched movies
   let allGenres = [];  // Store all genre data
   let watchlist = [];  // Store watchlist movies
 
   // Fetch genres from TMDb to populate genre filter dropdown
   $.ajax({
-    url: https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey},
+    url: `https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}`,
     method: 'GET',
     success: function (data) {
       allGenres = data.genres;
-      const genreOptions = allGenres.map(genre => <option value="${genre.name}">${genre.name}</option>).join('');
-      $('#genre-filter').html(<option value="All">All</option>${genreOptions});
+      const genreOptions = allGenres.map(genre => `<option value="${genre.name}">${genre.name}</option>`).join('');
+      $('#genre-filter').html(`<option value="All">All</option>${genreOptions}`);
     },
     error: function (err) {
       console.error('Error fetching genres:', err);
@@ -27,7 +27,7 @@ $(document).ready(function () {
       return;
     }
     $.ajax({
-      url: https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query},
+      url: `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}`,
       method: 'GET',
       success: function (data) {
         if (data.results && data.results.length > 0) {
@@ -56,7 +56,7 @@ $(document).ready(function () {
       const isInWatchlist = watchlist.some(w => w.id === movie.id);
       const watchlistButtonText = isInWatchlist ? 'Remove from Watchlist' : 'Add to Watchlist';
 
-      return 
+      return `
         <div class="movie" data-id="${movie.id}">
           <h3>${movie.title} (${movie.release_date ? movie.release_date.substring(0, 4) : 'Unknown'})</h3>
           <p>Genre: ${genres}</p>
@@ -64,7 +64,7 @@ $(document).ready(function () {
           <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
           <button class="watchlist-btn" data-id="${movie.id}">${watchlistButtonText}</button>
         </div>
-      ;
+      `;
     }).join('');
     $('#results').html(resultsHtml);
   }
@@ -123,12 +123,12 @@ $(document).ready(function () {
 
   // Display watchlist
   function displayWatchlist() {
-    const watchlistHtml = watchlist.map(movie => 
+    const watchlistHtml = watchlist.map(movie => `
       <div class="movie">
         <h3>${movie.title} (${movie.release_date ? movie.release_date.substring(0, 4) : 'Unknown'})</h3>
         <p>IMDb Rating: ${movie.vote_average || 'Not Available'}</p>
       </div>
-    ).join('');
+    `).join('');
     $('#watchlist').html(watchlistHtml);
     $('#watchlist-section').toggle(watchlist.length > 0);
   }
