@@ -43,7 +43,7 @@ $(document).ready(function () {
     });
   });
 
-  // Function to display the results
+  // Function to display the results in grid layout
   function displayResults(movies) {
     const resultsHtml = movies.map(movie => {
       const genres = movie.genre_ids.map(id => {
@@ -58,10 +58,12 @@ $(document).ready(function () {
 
       return `
         <div class="movie" data-id="${movie.id}">
+          <div class="movie-poster">
+            <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+          </div>
           <h3>${movie.title} (${movie.release_date ? movie.release_date.substring(0, 4) : 'Unknown'})</h3>
           <p>Genre: ${genres}</p>
           <p>IMDb Rating: ${imdbRating}</p>
-          <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
           <button class="watchlist-btn" data-id="${movie.id}">${watchlistButtonText}</button>
         </div>
       `;
@@ -85,13 +87,16 @@ $(document).ready(function () {
     displayWatchlist(); // Refresh watchlist
   });
 
-  // Display watchlist
+  // Display watchlist in grid layout
   function displayWatchlist() {
     if (watchlist.length === 0) {
       $('#watchlist').html('<p>Your watchlist is currently empty. Add movies to your watchlist to see them here!</p>');
     } else {
       const watchlistHtml = watchlist.map(movie => `
         <div class="movie">
+          <div class="movie-poster">
+            <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+          </div>
           <h3>${movie.title} (${movie.release_date ? movie.release_date.substring(0, 4) : 'Unknown'})</h3>
           <p>IMDb Rating: ${movie.vote_average || 'Not Available'}</p>
           <button class="remove-watchlist-btn" data-id="${movie.id}">Remove from Watchlist</button>
@@ -112,9 +117,7 @@ $(document).ready(function () {
   // Toggle watchlist visibility
   $('#watchlist-toggle').on('click', function () {
     $('#watchlist-section').toggle();
-    if (watchlist.length === 0) {
-      $('#watchlist').html('<p>Your watchlist is currently empty. Add movies to your watchlist to see them here!</p>');
-    }
+    displayWatchlist(); // Refresh the watchlist when toggled
   });
 
   // Event listener for genre filter change
