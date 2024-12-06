@@ -88,7 +88,7 @@ $(document).ready(function () {
 
   // Function to sort movies by IMDb rating
   function sortByRating(order) {
-    const sortedMovies = moviesData.sort((a, b) => {
+    const sortedMovies = [...moviesData].sort((a, b) => {
       const ratingA = a.vote_average || 0;
       const ratingB = b.vote_average || 0;
       return order === 'desc' ? ratingB - ratingA : ratingA - ratingB;
@@ -98,7 +98,7 @@ $(document).ready(function () {
 
   // Function to sort movies by year
   function sortByYear(order) {
-    const sortedMovies = moviesData.sort((a, b) => {
+    const sortedMovies = [...moviesData].sort((a, b) => {
       const yearA = a.release_date ? parseInt(a.release_date.substring(0, 4)) : 0;
       const yearB = b.release_date ? parseInt(b.release_date.substring(0, 4)) : 0;
       return order === 'desc' ? yearB - yearA : yearA - yearB;
