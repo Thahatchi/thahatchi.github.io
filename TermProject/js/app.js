@@ -1,151 +1,76 @@
 $(document).ready(function () {
-  const apiKey = 'ec09c60445eaa509d0fbf586e3218851'; // Your TMDb API Key
-  let moviesData = []; // Store fetched movies
-  let allGenres = [];  // Store all genre data
-  let watchlist = [];  // Store watchlist movies
+  const watchlist = [];
 
-  // Fetch genres from TMDb to populate genre filter dropdown
-  $.ajax({
-    url: `https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}`,
-    method: 'GET',
-    success: function (data) {
-      allGenres = data.genres;
-      const genreOptions = allGenres.map(genre => `<option value="${genre.name}">${genre.name}</option>`).join('');
-      $('#genre-filter').html(`<option value="All">All</option>${genreOptions}`);
-    },
-    error: function (err) {
-      console.error('Error fetching genres:', err);
-    }
-  });
-
-  // Handle the form submit to search for movies
+  // Handle movie search
   $('#searchForm').on('submit', function (e) {
     e.preventDefault();
-    const query = $('#movieTitle').val().trim();
-    if (!query) {
-      alert('Please enter a movie title.');
-      return;
-    }
-    $.ajax({
-      url: `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}`,
-      method: 'GET',
-      success: function (data) {
-        if (data.results && data.results.length > 0) {
-          moviesData = data.results;
-          displayResults(moviesData);
-        } else {
-          $('#results').html('<p>No results found.</p>');
-        }
-      },
-      error: function (err) {
-        console.error('Error fetching data:', err);
-      }
-    });
+    const query = $('#movieTitle').val();
+    searchMovies(query);
   });
 
-  // Function to display the results
-  function displayResults(movies) {
-    const resultsHtml = movies.map(movie => {
-      const genres = movie.genre_ids.map(id => {
-        const genre = allGenres.find(g => g.id === id);
-        return genre ? genre.name : 'Unknown';
-      }).join(', ');
+  // Search for movies (dummy example)
+  function searchMovies(query) {
+    // Dummy API response simulation
+    const dummyMovies = [
+      { id: 1, title: "Movie 1", poster: "https://via.placeholder.com/150", year: 2021 },
+      { id: 2, title: "Movie 2", poster: "https://via.placeholder.com/150", year: 2022 },
+    ];
 
-      const imdbRating = movie.vote_average || 'Not Available';
+    displayMovies(dummyMovies);
+  }
 
-      const isInWatchlist = watchlist.some(w => w.id === movie.id);
-      const watchlistButtonText = isInWatchlist ? 'Remove from Watchlist' : 'Add to Watchlist';
-
-      return `
-        <div class="movie" data-id="${movie.id}">
-          <h3>${movie.title} (${movie.release_date ? movie.release_date.substring(0, 4) : 'Unknown'})</h3>
-          <p>Genre: ${genres}</p>
-          <p>IMDb Rating: ${imdbRating}</p>
-          <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
-          <button class="watchlist-btn" data-id="${movie.id}">${watchlistButtonText}</button>
+  // Display search results
+  function displayMovies(movies) {
+    const resultsContainer = $('#results');
+    resultsContainer.empty();
+    movies.forEach(movie => {
+      const movieCard = $(`
+        <div class="movie-card">
+          <img src="${movie.poster}" alt="${movie.title}">
+          <h3>${movie.title}</h3>
+          <p>Year: ${movie.year}</p>
+          <button class="add-to-watchlist" data-id="${movie.id}" data-title="${movie.title}" data-poster="${movie.poster}">Add to Watchlist</button>
         </div>
-      `;
-    }).join('');
-    $('#results').html(resultsHtml);
-  }
-
-  // Function to filter movies by genre dynamically
-  function filterByGenre(genre) {
-    if (genre === 'All') {
-      displayResults(moviesData);
-    } else {
-      const filteredMovies = moviesData.filter(movie => {
-        const genres = movie.genre_ids.map(id => {
-          const genre = allGenres.find(g => g.id === id);
-          return genre ? genre.name : 'Unknown';
-        });
-        return genres.includes(genre);
-      });
-      displayResults(filteredMovies);
-    }
-  }
-
-  // Function to sort movies by IMDb rating
-  function sortByRating(order) {
-    const sortedMovies = [...moviesData].sort((a, b) => {
-      const ratingA = a.vote_average || 0;
-      const ratingB = b.vote_average || 0;
-      return order === 'desc' ? ratingB - ratingA : ratingA - ratingB;
+      `);
+      resultsContainer.append(movieCard);
     });
-    displayResults(sortedMovies);
   }
 
-  // Function to sort movies by year
-  function sortByYear(order) {
-    const sortedMovies = [...moviesData].sort((a, b) => {
-      const yearA = a.release_date ? parseInt(a.release_date.substring(0, 4)) : 0;
-      const yearB = b.release_date ? parseInt(b.release_date.substring(0, 4)) : 0;
-      return order === 'desc' ? yearB - yearA : yearA - yearB;
-    });
-    displayResults(sortedMovies);
-  }
-
-  // Add/Remove movies from watchlist
-  $(document).on('click', '.watchlist-btn', function () {
+  // Handle Add to Watchlist
+  $(document).on('click', '.add-to-watchlist', function () {
     const movieId = $(this).data('id');
-    const movie = moviesData.find(m => m.id === movieId);
-    if (!movie) return;
+    const movieTitle = $(this).data('title');
+    const moviePoster = $(this).data('poster');
 
-    const index = watchlist.findIndex(w => w.id === movie.id);
-    if (index > -1) {
-      watchlist.splice(index, 1); // Remove from watchlist
+    if (!watchlist.some(movie => movie.id === movieId)) {
+      watchlist.push({ id: movieId, title: movieTitle, poster: moviePoster });
+      updateWatchlist();
     } else {
-      watchlist.push(movie); // Add to watchlist
+      alert("Movie is already in your watchlist!");
     }
-    displayResults(moviesData); // Refresh movie list
-    displayWatchlist(); // Refresh watchlist
   });
 
-  // Display watchlist
-  function displayWatchlist() {
-    const watchlistHtml = watchlist.map(movie => `
-      <div class="movie">
-        <h3>${movie.title} (${movie.release_date ? movie.release_date.substring(0, 4) : 'Unknown'})</h3>
-        <p>IMDb Rating: ${movie.vote_average || 'Not Available'}</p>
-      </div>
-    `).join('');
-    $('#watchlist').html(watchlistHtml);
-    $('#watchlist-section').toggle(watchlist.length > 0);
+  // Update Watchlist
+  function updateWatchlist() {
+    const watchlistContainer = $('#watchlist');
+    watchlistContainer.empty();
+    if (watchlist.length === 0) {
+      watchlistContainer.html('<p>Your watchlist is currently empty. Add movies to your watchlist to see them here!</p>');
+    } else {
+      watchlist.forEach(movie => {
+        const watchlistItem = $(`
+          <div class="movie-card">
+            <img src="${movie.poster}" alt="${movie.title}">
+            <h3>${movie.title}</h3>
+          </div>
+        `);
+        watchlistContainer.append(watchlistItem);
+      });
+    }
   }
 
-  // Event listener for genre filter change
-  $('#genre-filter').on('change', function () {
-    const selectedGenre = $(this).val();
-    filterByGenre(selectedGenre);
-  });
-
-  // Event listener for sort options change
-  $('#sort-options').on('change', function () {
-    const sortOrder = $(this).val();
-    if (sortOrder.includes('rating')) {
-      sortByRating(sortOrder.includes('desc') ? 'desc' : 'asc');
-    } else if (sortOrder.includes('year')) {
-      sortByYear(sortOrder.includes('desc') ? 'desc' : 'asc');
-    }
+  // Toggle Watchlist Visibility
+  $('#view-watchlist').on('click', function () {
+    $('#watchlist-section').toggle();
   });
 });
