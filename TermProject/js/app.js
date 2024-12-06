@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  const apiKey = 'ec09c60445eaa509d0fbf586e3218851'; // Correct TMDb API Key
+  const apiKey = 'ec09c60445eaa509d0fbf586e3218851'; // Your TMDb API Key
   let moviesData = []; // Store fetched movies
   let allGenres = [];  // Store all genre data
   let watchlist = [];  // Store watchlist movies
