@@ -154,28 +154,34 @@ $(document).ready(function () {
   $('#sort-options').on('change', function () {
     const sortOrder = $(this).val();
     if (sortOrder.includes('rating')) {
-      sortByRating(sortOrder.includes('desc') ? 'desc' : 'asc');
+      sortByRating(sortOrder);
     } else if (sortOrder.includes('year')) {
-      sortByYear(sortOrder.includes('desc') ? 'desc' : 'asc');
+      sortByYear(sortOrder);
     }
   });
 
-  // Function to sort movies by IMDb rating
+  // Sort movies by rating
   function sortByRating(order) {
     const sortedMovies = [...moviesData].sort((a, b) => {
-      const ratingA = a.vote_average || 0;
-      const ratingB = b.vote_average || 0;
-      return order === 'desc' ? ratingB - ratingA : ratingA - ratingB;
+      if (order === 'rating-asc') {
+        return a.vote_average - b.vote_average;
+      } else if (order === 'rating-desc') {
+        return b.vote_average - a.vote_average;
+      }
     });
     displayResults(sortedMovies);
   }
 
-  // Function to sort movies by year
+  // Sort movies by year
   function sortByYear(order) {
     const sortedMovies = [...moviesData].sort((a, b) => {
-      const yearA = a.release_date ? parseInt(a.release_date.substring(0, 4)) : 0;
-      const yearB = b.release_date ? parseInt(b.release_date.substring(0, 4)) : 0;
-      return order === 'desc' ? yearB - yearA : yearA - yearB;
+      const yearA = new Date(a.release_date).getFullYear();
+      const yearB = new Date(b.release_date).getFullYear();
+      if (order === 'year-asc') {
+        return yearA - yearB;
+      } else if (order === 'year-desc') {
+        return yearB - yearA;
+      }
     });
     displayResults(sortedMovies);
   }
