@@ -13,6 +13,7 @@
     <h1>Movies Search App</h1>
   </header>
   <main>
+    <!-- Search Section -->
     <section id="search">
       <form id="searchForm">
         <input type="text" id="movieTitle" placeholder="Search for a movie..." required>
@@ -35,12 +36,13 @@
         <option value="rating-asc">IMDB Rating: Lowest to Highest</option>
       </select>
 
-      <!-- Watchlist Button -->
-      <button id="view-watchlist" type="button">View Watchlist</button>
+      <!-- Watchlist Toggle Button -->
+      <button id="viewWatchlist" type="button">View Watchlist</button>
     </section>
 
-    <section id="results">
-      <!-- This will be populated with search results dynamically -->
+    <!-- Search Results Section -->
+    <section id="results" class="movie-grid">
+      <!-- Populated dynamically with search results -->
     </section>
 
     <!-- Watchlist Section -->
